@@ -632,4 +632,30 @@ class Product extends ResourceDependent implements ProductInterface
         $this->options = $options;
         return $this;
     }
+
+    /**
+     * @return string
+     */
+    public function getResourceClassName()
+    {
+        return '\\DreamCommerce\\Resource\\Product';
+    }
+
+    /**
+     * @return int
+     */
+    public function getResourceId()
+    {
+        return $this->productId;
+    }
+
+    /**
+     * @param int $id
+     * @return $this
+     */
+    public function setResourceId($id)
+    {
+        $this->productId = $id;
+        return $this;
+    }
 }

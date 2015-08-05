@@ -2,7 +2,7 @@
 
 namespace DreamCommerce\Model\Shop;
 
-abstract class Attribute extends Base implements AttributeInterface
+abstract class Attribute extends ShopDependent implements AttributeInterface
 {
     /**
      * @var int

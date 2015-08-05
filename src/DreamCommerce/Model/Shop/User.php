@@ -441,4 +441,30 @@ class User extends ResourceDependent implements UserInterface
         $this->additionalFields = $additionalFields;
         return $this;
     }
+
+    /**
+     * @return string
+     */
+    public function getResourceClassName()
+    {
+        return '\\DreamCommerce\\Resource\\User';
+    }
+
+    /**
+     * @return int
+     */
+    public function getResourceId()
+    {
+        return $this->userId;
+    }
+
+    /**
+     * @param int $id
+     * @return $this
+     */
+    public function setResourceId($id)
+    {
+        $this->userId = $id;
+        return $this;
+    }
 }

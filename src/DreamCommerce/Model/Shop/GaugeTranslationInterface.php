@@ -2,7 +2,7 @@
 
 namespace DreamCommerce\Model\Shop;
 
-interface GaugeTranslationInterface extends LanguageDependentInterface, BaseInterface
+interface GaugeTranslationInterface extends LanguageDependentInterface, ShopDependentInterface
 {
     /**
      * @return GaugeInterface

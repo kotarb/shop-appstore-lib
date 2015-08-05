@@ -2,7 +2,7 @@
 
 namespace DreamCommerce\Model\Shop;
 
-class StatusTranslation extends Base implements StatusTranslationInterface
+class StatusTranslation extends ShopDependent implements StatusTranslationInterface
 {
     /**
      * @var int

@@ -230,4 +230,30 @@ class Status extends ResourceDependent implements StatusInterface
         $this->orders = $orders;
         return $this;
     }
+
+    /**
+     * @return string
+     */
+    public function getResourceClassName()
+    {
+        return '\\DreamCommerce\\Resource\\Status';
+    }
+
+    /**
+     * @return int
+     */
+    public function getResourceId()
+    {
+        return $this->statusId;
+    }
+
+    /**
+     * @param int $id
+     * @return $this
+     */
+    public function setResourceId($id)
+    {
+        $this->statusId = $id;
+        return $this;
+    }
 }

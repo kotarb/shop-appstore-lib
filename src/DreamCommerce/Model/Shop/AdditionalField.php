@@ -2,7 +2,11 @@
 
 namespace DreamCommerce\Model\Shop;
 
-abstract class AdditionalField extends Base implements AdditionalFieldInterface
+/**
+ * Class AdditionalField
+ * @package DreamCommerce\Model\Shop
+ */
+abstract class AdditionalField extends ShopDependent implements AdditionalFieldInterface
 {
     /**
      * @var int

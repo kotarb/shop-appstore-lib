@@ -162,4 +162,30 @@ class Subscriber extends ResourceDependent implements SubscriberInterface
         $this->groups = $groups;
         return $this;
     }
+
+    /**
+     * @return string
+     */
+    public function getResourceClassName()
+    {
+        return '\\DreamCommerce\\Resource\\Subscriber';
+    }
+
+    /**
+     * @return int
+     */
+    public function getResourceId()
+    {
+        return $this->subscriberId;
+    }
+
+    /**
+     * @param int $id
+     * @return $this
+     */
+    public function setResourceId($id)
+    {
+        $this->subscriberId = $id;
+        return $this;
+    }
 }

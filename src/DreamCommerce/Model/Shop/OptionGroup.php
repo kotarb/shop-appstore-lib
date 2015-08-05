@@ -142,4 +142,30 @@ class OptionGroup extends ResourceDependent implements OptionGroupInterface
         $this->options = $options;
         return $this;
     }
+
+    /**
+     * @return string
+     */
+    public function getResourceClassName()
+    {
+        return '\\DreamCommerce\\Resource\\OptionGroup';
+    }
+
+    /**
+     * @return int
+     */
+    public function getResourceId()
+    {
+        return $this->groupId;
+    }
+
+    /**
+     * @param int $id
+     * @return $this
+     */
+    public function setResourceId($id)
+    {
+        $this->groupId = $id;
+        return $this;
+    }
 }

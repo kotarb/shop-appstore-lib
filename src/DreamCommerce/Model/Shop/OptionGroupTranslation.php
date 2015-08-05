@@ -2,7 +2,7 @@
 
 namespace DreamCommerce\Model\Shop;
 
-class OptionGroupTranslation extends Base implements OptionGroupTranslationInterface
+class OptionGroupTranslation extends ShopDependent implements OptionGroupTranslationInterface
 {
     /**
      * @var int

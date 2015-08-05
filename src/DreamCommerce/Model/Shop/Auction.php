@@ -492,4 +492,30 @@ class Auction extends ResourceDependent implements AuctionInterface
         $this->auctionOrders = $auctionOrders;
         return $this;
     }
+
+    /**
+     * @return string
+     */
+    public function getResourceClassName()
+    {
+        return '\\DreamCommerce\\Resource\\Auction';
+    }
+
+    /**
+     * @return int
+     */
+    public function getResourceId()
+    {
+        return $this->auctionId;
+    }
+
+    /**
+     * @param int $id
+     * @return $this
+     */
+    public function setResourceId($id)
+    {
+        $this->auctionId = $id;
+        return $this;
+    }
 }

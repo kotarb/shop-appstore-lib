@@ -112,4 +112,30 @@ class AuctionHouse extends ResourceDependent implements AuctionHouseInterface
         $this->auctions = $auctions;
         return $this;
     }
+
+    /**
+     * @return string
+     */
+    public function getResourceClassName()
+    {
+        return '\\DreamCommerce\\Resource\\AuctionHouse';
+    }
+
+    /**
+     * @return int
+     */
+    public function getResourceId()
+    {
+        return $this->auctionHouseId;
+    }
+
+    /**
+     * @param int $id
+     * @return $this
+     */
+    public function setResourceId($id)
+    {
+        $this->auctionHouseId = $id;
+        return $this;
+    }
 }

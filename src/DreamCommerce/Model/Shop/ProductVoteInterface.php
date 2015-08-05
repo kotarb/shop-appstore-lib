@@ -2,7 +2,7 @@
 
 namespace DreamCommerce\Model\Shop;
 
-interface ProductVoteInterface extends BaseInterface
+interface ProductVoteInterface extends ShopDependentInterface
 {
     /**
      * @return ProductInterface

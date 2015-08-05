@@ -2,7 +2,7 @@
 
 namespace DreamCommerce\Model\Shop;
 
-interface ZoneCodeInterface extends BaseInterface
+interface ZoneCodeInterface extends ShopDependentInterface
 {
 
 }

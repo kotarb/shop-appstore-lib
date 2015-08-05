@@ -393,4 +393,30 @@ class Shipping extends ResourceDependent implements ShippingInterface
         $this->zone = $zone;
         return $this;
     }
+
+    /**
+     * @return string
+     */
+    public function getResourceClassName()
+    {
+        return '\\DreamCommerce\\Resource\\Shipping';
+    }
+
+    /**
+     * @return int
+     */
+    public function getResourceId()
+    {
+        return $this->shippingId;
+    }
+
+    /**
+     * @param int $id
+     * @return $this
+     */
+    public function setResourceId($id)
+    {
+        $this->shippingId = $id;
+        return $this;
+    }
 }

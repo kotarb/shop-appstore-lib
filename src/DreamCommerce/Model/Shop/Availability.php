@@ -193,4 +193,30 @@ class Availability extends ResourceDependent implements AvailabilityInterface
         $this->productStocks = $productStocks;
         return $this;
     }
+
+    /**
+     * @return string
+     */
+    public function getResourceClassName()
+    {
+        return '\\DreamCommerce\\Resource\\Availability';
+    }
+
+    /**
+     * @return int
+     */
+    public function getResourceId()
+    {
+        return $this->availabilityId;
+    }
+
+    /**
+     * @param int $id
+     * @return $this
+     */
+    public function setResourceId($id)
+    {
+        $this->availabilityId = $id;
+        return $this;
+    }
 }

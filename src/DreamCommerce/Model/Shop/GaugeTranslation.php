@@ -2,7 +2,7 @@
 
 namespace DreamCommerce\Model\Shop;
 
-class GaugeTranslation extends Base implements GaugeTranslationInterface
+class GaugeTranslation extends ShopDependent implements GaugeTranslationInterface
 {
     /**
      * @var int

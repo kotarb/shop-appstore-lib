@@ -2,7 +2,7 @@
 
 namespace DreamCommerce\Model\Shop;
 
-interface UnitTranslationInterface extends TranslationInterface, BaseInterface
+interface UnitTranslationInterface extends TranslationInterface, ShopDependentInterface
 {
     /**
      * @return UnitInterface

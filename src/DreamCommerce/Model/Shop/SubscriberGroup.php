@@ -112,4 +112,30 @@ class SubscriberGroup extends ResourceDependent implements SubscriberGroupInterf
         $this->subscribers = $subscribers;
         return $this;
     }
+
+    /**
+     * @return string
+     */
+    public function getResourceClassName()
+    {
+        return '\\DreamCommerce\\Resource\\SubscriberGroup';
+    }
+
+    /**
+     * @return int
+     */
+    public function getResourceId()
+    {
+        return $this->groupId;
+    }
+
+    /**
+     * @param int $id
+     * @return $this
+     */
+    public function setResourceId($id)
+    {
+        $this->groupId = $id;
+        return $this;
+    }
 }

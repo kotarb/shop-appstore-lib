@@ -89,4 +89,30 @@ class Delivery extends ResourceDependent implements DeliveryInterface
         $this->translations = $translations;
         return $this;
     }
+
+    /**
+     * @return string
+     */
+    public function getResourceClassName()
+    {
+        return '\\DreamCommerce\\Resource\\Delivery';
+    }
+
+    /**
+     * @return int
+     */
+    public function getResourceId()
+    {
+        return $this->deliveryId;
+    }
+
+    /**
+     * @param int $id
+     * @return $this
+     */
+    public function setResourceId($id)
+    {
+        $this->deliveryId = $id;
+        return $this;
+    }
 }

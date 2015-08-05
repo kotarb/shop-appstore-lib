@@ -2,13 +2,40 @@
 
 namespace DreamCommerce\Model\Shop;
 
-abstract class ResourceDependent extends Base implements ResourceDependentInterface
+abstract class ResourceDependent extends ShopDependent implements ResourceDependentInterface
 {
     /**
-     * @return string
+     * @return \DateTime|null
+     * @throws \RuntimeException
      */
-    public function getResourceName()
+    public function getCreationDate()
     {
-        return null;
+        throw new \RuntimeException('Not implemented yet!');
+    }
+
+    /**
+     * @param \DateTime|null $creationDate
+     * @return $this
+     */
+    public function setCreationDate($creationDate)
+    {
+        throw new \RuntimeException('Not implemented yet!');
+    }
+
+    /**
+     * @return \DateTime|null
+     */
+    public function getModificationDate()
+    {
+        throw new \RuntimeException('Not implemented yet!');
+    }
+
+    /**
+     * @param \DateTime|null $modificationDate
+     * @return $this
+     */
+    public function setModificationDate($modificationDate)
+    {
+        throw new \RuntimeException('Not implemented yet!');
     }
 }

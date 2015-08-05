@@ -146,4 +146,31 @@ class Category extends ResourceDependent implements CategoryInterface
         $this->products = $products;
         return $this;
     }
+
+
+    /**
+     * @return string
+     */
+    public function getResourceClassName()
+    {
+        return '\\DreamCommerce\\Resource\\Category';
+    }
+
+    /**
+     * @return int
+     */
+    public function getResourceId()
+    {
+        return $this->categoryId;
+    }
+
+    /**
+     * @param int $id
+     * @return $this
+     */
+    public function setResourceId($id)
+    {
+        $this->categoryId = $id;
+        return $this;
+    }
 }

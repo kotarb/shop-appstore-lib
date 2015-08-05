@@ -2,7 +2,7 @@
 
 namespace DreamCommerce\Model\Shop;
 
-class DeliveryTranslation extends Base implements DeliveryTranslationInterface
+class DeliveryTranslation extends ShopDependent implements DeliveryTranslationInterface
 {
     /**
      * @var int

@@ -2,7 +2,7 @@
 
 namespace DreamCommerce\Model\Shop;
 
-class ZoneCode extends Base
+class ZoneCode extends ShopDependent
 {
     /**
      * @var int

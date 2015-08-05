@@ -157,4 +157,30 @@ class Producer extends ResourceDependent implements ProducerInterface
         $this->products = $products;
         return $this;
     }
+
+    /**
+     * @return string
+     */
+    public function getResourceClassName()
+    {
+        return '\\DreamCommerce\\Resource\\Producer';
+    }
+
+    /**
+     * @return int
+     */
+    public function getResourceId()
+    {
+        return $this->producerId;
+    }
+
+    /**
+     * @param int $id
+     * @return $this
+     */
+    public function setResourceId($id)
+    {
+        $this->producerId = $id;
+        return $this;
+    }
 }

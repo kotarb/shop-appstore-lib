@@ -2,7 +2,7 @@
 
 namespace DreamCommerce\Model\Shop;
 
-abstract class Address extends Base implements AddressInterface
+abstract class Address extends ShopDependent implements AddressInterface
 {
     /**
      * @var int

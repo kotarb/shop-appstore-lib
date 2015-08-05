@@ -192,4 +192,30 @@ class AttributeGroup extends ResourceDependent implements AttributeGroupInterfac
         $this->language = $language;
         return $this;
     }
+
+    /**
+     * @return string
+     */
+    public function getResourceClassName()
+    {
+        return '\\DreamCommerce\\Resource\\AttributeGroup';
+    }
+
+    /**
+     * @return int
+     */
+    public function getResourceId()
+    {
+        return $this->attributeGroupId;
+    }
+
+    /**
+     * @param int $id
+     * @return $this
+     */
+    public function setResourceId($id)
+    {
+        $this->attributeGroupId = $id;
+        return $this;
+    }
 }

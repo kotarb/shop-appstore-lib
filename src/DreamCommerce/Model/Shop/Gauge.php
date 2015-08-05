@@ -129,4 +129,30 @@ class Gauge extends ResourceDependent implements GaugeInterface
     {
         $this->products = $products;
     }
+
+    /**
+     * @return string
+     */
+    public function getResourceClassName()
+    {
+        return '\\DreamCommerce\\Resource\\Gauge';
+    }
+
+    /**
+     * @return int
+     */
+    public function getResourceId()
+    {
+        return $this->gaugeId;
+    }
+
+    /**
+     * @param int $id
+     * @return $this
+     */
+    public function setResourceId($id)
+    {
+        $this->gaugeId = $id;
+        return $this;
+    }
 }

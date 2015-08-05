@@ -234,4 +234,30 @@ class Payment extends ResourceDependent implements PaymentInterface
         $this->shippings = $shipping;
         return $this;
     }
+
+    /**
+     * @return string
+     */
+    public function getResourceClassName()
+    {
+        return '\\DreamCommerce\\Resource\\Payment';
+    }
+
+    /**
+     * @return int
+     */
+    public function getResourceId()
+    {
+        return $this->paymentId;
+    }
+
+    /**
+     * @param int $id
+     * @return $this
+     */
+    public function setResourceId($id)
+    {
+        $this->paymentId = $id;
+        return $this;
+    }
 }

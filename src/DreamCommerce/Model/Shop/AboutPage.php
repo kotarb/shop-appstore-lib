@@ -216,4 +216,30 @@ class AboutPage extends ResourceDependent implements AboutPageInterface
         $this->language = $language;
         return $this;
     }
+
+    /**
+     * @return string
+     */
+    public function getResourceClassName()
+    {
+        return '\\DreamCommerce\\Resource\\AboutPage';
+    }
+
+    /**
+     * @return int
+     */
+    public function getResourceId()
+    {
+        return $this->pageId;
+    }
+
+    /**
+     * @param int $id
+     * @return $this
+     */
+    public function setResourceId($id)
+    {
+        $this->pageId = $id;
+        return $this;
+    }
 }

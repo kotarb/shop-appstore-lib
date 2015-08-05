@@ -2,7 +2,7 @@
 
 namespace DreamCommerce\Model\Shop;
 
-class ParcelProduct extends Base implements ParcelProductInterface
+class ParcelProduct extends ShopDependent implements ParcelProductInterface
 {
     /**
      * @var int

@@ -645,4 +645,30 @@ class Order extends ResourceDependent implements OrderInterface
         $this->additionalFields = $additionalFields;
         return $this;
     }
+
+    /**
+     * @return string
+     */
+    public function getResourceClassName()
+    {
+        return '\\DreamCommerce\\Resource\\Order';
+    }
+
+    /**
+     * @return int
+     */
+    public function getResourceId()
+    {
+        return $this->orderId;
+    }
+
+    /**
+     * @param int $id
+     * @return $this
+     */
+    public function setResourceId($id)
+    {
+        $this->orderId = $id;
+        return $this;
+    }
 }

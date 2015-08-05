@@ -223,4 +223,30 @@ class OptionValue extends ResourceDependent implements OptionValueInterface
         $this->translations = $translations;
         return $this;
     }
+
+    /**
+     * @return string
+     */
+    public function getResourceClassName()
+    {
+        return '\\DreamCommerce\\Resource\\OptionGroup';
+    }
+
+    /**
+     * @return int
+     */
+    public function getResourceId()
+    {
+        return $this->ovalueId;
+    }
+
+    /**
+     * @param int $id
+     * @return $this
+     */
+    public function setResourceId($id)
+    {
+        $this->ovalueId = $id;
+        return $this;
+    }
 }

@@ -2,7 +2,7 @@
 
 namespace DreamCommerce\Model\Shop;
 
-interface AddressInterface extends BaseInterface
+interface AddressInterface extends ShopDependentInterface
 {
 
 }

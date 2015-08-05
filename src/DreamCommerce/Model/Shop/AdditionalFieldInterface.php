@@ -2,7 +2,11 @@
 
 namespace DreamCommerce\Model\Shop;
 
-interface AdditionalFieldInterface extends BaseInterface
+/**
+ * Interface AdditionalFieldInterface
+ * @package DreamCommerce\Model\Shop
+ */
+interface AdditionalFieldInterface extends ShopDependentInterface
 {
     const FIELD_TYPE_TEXT = 1;
     const FIELD_TYPE_CHECKBOX = 2;

@@ -2,7 +2,7 @@
 
 namespace DreamCommerce\Model\Shop;
 
-interface ShippingTranslationInterface extends TranslationInterface, BaseInterface
+interface ShippingTranslationInterface extends TranslationInterface, ShopDependentInterface
 {
     /**
      * @return ShippingInterface

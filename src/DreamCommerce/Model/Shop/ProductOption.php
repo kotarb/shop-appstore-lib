@@ -2,7 +2,7 @@
 
 namespace DreamCommerce\Model\Shop;
 
-abstract class ProductOption extends Base implements ProductOptionInterface
+abstract class ProductOption extends ShopDependent implements ProductOptionInterface
 {
     /**
      * @var int

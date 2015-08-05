@@ -283,4 +283,31 @@ class Currency extends ResourceDependent implements CurrencyInterface
         $this->products = $products;
         return $this;
     }
+
+
+    /**
+     * @return string
+     */
+    public function getResourceClassName()
+    {
+        return '\\DreamCommerce\\Resource\\Currency';
+    }
+
+    /**
+     * @return int
+     */
+    public function getResourceId()
+    {
+        return $this->currencyId;
+    }
+
+    /**
+     * @param int $id
+     * @return $this
+     */
+    public function setResourceId($id)
+    {
+        $this->currencyId = $id;
+        return $this;
+    }
 }

@@ -2,7 +2,7 @@
 
 namespace DreamCommerce\Model\Shop;
 
-class AvailabilityTranslation extends Base implements AvailabilityTranslationInterface
+class AvailabilityTranslation extends ShopDependent implements AvailabilityTranslationInterface
 {
     /**
      * @var int
