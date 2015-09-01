@@ -6,7 +6,7 @@ namespace DreamCommerce\Model\Shop;
  * Class AdditionalField
  * @package DreamCommerce\Model\Shop
  */
-abstract class AdditionalField extends ShopDependent implements AdditionalFieldInterface
+abstract class AdditionalField extends ResourceDependent implements AdditionalFieldInterface
 {
     /**
      * @var int
@@ -166,6 +166,32 @@ abstract class AdditionalField extends ShopDependent implements AdditionalFieldI
     public function setOrder($order)
     {
         $this->order = $order;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getResourceClassName()
+    {
+        return '\\DreamCommerce\\Resource\\AdditionalField';
+    }
+
+    /**
+     * @return int
+     */
+    public function getResourceId()
+    {
+        return $this->fieldId;
+    }
+
+    /**
+     * @param int $id
+     * @return $this
+     */
+    public function setResourceId($id)
+    {
+        $this->fieldId = $id;
         return $this;
     }
 }

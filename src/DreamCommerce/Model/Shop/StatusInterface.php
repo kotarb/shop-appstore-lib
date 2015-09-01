@@ -4,11 +4,6 @@ namespace DreamCommerce\Model\Shop;
 
 interface StatusInterface extends TranslationDependentInterface, ResourceDependentInterface
 {
-    const STATUS_TYPE_NEW = 1;
-    const STATUS_TYPE_OPENED = 2;
-    const STATUS_TYPE_CLOSED = 3;
-    const STATUS_TYPE_NOT_COMPLETED = 4;
-
     /**
      * @return \ArrayAccess
      */

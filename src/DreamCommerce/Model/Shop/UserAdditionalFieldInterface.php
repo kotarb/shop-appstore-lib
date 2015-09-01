@@ -2,12 +2,8 @@
 
 namespace DreamCommerce\Model\Shop;
 
-interface UserAdditionalFieldInterface extends AdditionalFieldInterface
+interface UserAdditionalFieldInterface extends ShopDependentInterface
 {
-    const LOCATE_USER = 1;
-    const LOCATE_USER_ACCOUNT = 2;
-    const LOCATE_USER_REGISTRATION = 4;
-
     /**
      * @return UserInterface
      */
@@ -18,4 +14,15 @@ interface UserAdditionalFieldInterface extends AdditionalFieldInterface
      * @return $this
      */
     public function setUser(UserInterface $user);
+
+    /**
+     * @return AdditionalFieldInterface
+     */
+    public function getAdditionalField();
+
+    /**
+     * @param AdditionalFieldInterface $additionalField
+     * @return $this
+     */
+    public function setAdditionalField(AdditionalFieldInterface $additionalField);
 }

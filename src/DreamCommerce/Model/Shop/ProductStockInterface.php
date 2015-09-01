@@ -4,16 +4,6 @@ namespace DreamCommerce\Model\Shop;
 
 interface ProductStockInterface extends ResourceDependentInterface
 {
-    const PRICE_TYPE_NO_VALUE = 0;
-    const PRICE_TYPE_NEW_VALUE = 1;
-    const PRICE_TYPE_INCREASE_VALUE = 2;
-    const PRICE_TYPE_DECREASE_VALUE = 3;
-
-    const WEIGHT_TYPE_NO_VALUE = 0;
-    const WEIGHT_TYPE_NEW_VALUE = 1;
-    const WEIGHT_TYPE_INCREASE_VALUE = 2;
-    const WEIGHT_TYPE_DECREASE_VALUE = 3;
-
     /**
      * @return ProductInterface
      */

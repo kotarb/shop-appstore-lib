@@ -5,9 +5,9 @@ namespace DreamCommerce\Model;
 class Token implements TokenInterface
 {
     /**
-     * @var int $accessTokenId
+     * @var int $tokenId
      */
-    protected $accessTokenId;
+    protected $tokenId;
 
     /**
      * @var \DateTime $createdAt
@@ -37,18 +37,18 @@ class Token implements TokenInterface
     /**
      * @return int
      */
-    public function getAccessTokenId()
+    public function getTokenId()
     {
-        return $this->accessTokenId;
+        return $this->tokenId;
     }
 
     /**
-     * @param int $accessTokenId
+     * @param int $tokenId
      * @return $this
      */
-    public function setAccessTokenId($accessTokenId)
+    public function setTokenId($tokenId)
     {
-        $this->accessTokenId = $accessTokenId;
+        $this->tokenId = $tokenId;
         return $this;
     }
 

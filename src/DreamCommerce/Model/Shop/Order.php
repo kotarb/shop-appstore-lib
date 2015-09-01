@@ -85,6 +85,51 @@ class Order extends ResourceDependent implements OrderInterface
     protected $currencyRate;
 
     /**
+     * @var float
+     */
+    protected $paid;
+
+    /**
+     * @var string
+     */
+    protected $ipAddress;
+
+    /**
+     * @var float
+     */
+    protected $discountClient;
+
+    /**
+     * @var float
+     */
+    protected $discountGroup;
+
+    /**
+     * @var float
+     */
+    protected $discountLevels;
+
+    /**
+     * @var float
+     */
+    protected $discountCode;
+
+    /**
+     * @var float
+     */
+    protected $shippingVatValue;
+
+    /**
+     * @var string
+     */
+    protected $shippingVatName;
+
+    /**
+     * @var int
+     */
+    protected $origin;
+
+    /**
      * @var CurrencyInterface
      */
     protected $currency;
@@ -443,6 +488,168 @@ class Order extends ResourceDependent implements OrderInterface
     public function setCurrencyRate($currencyRate)
     {
         $this->currencyRate = $currencyRate;
+        return $this;
+    }
+
+    /**
+     * @return float
+     */
+    public function getPaid()
+    {
+        return $this->paid;
+    }
+
+    /**
+     * @param float $paid
+     * @return $this
+     */
+    public function setPaid($paid)
+    {
+        $this->paid = $paid;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getIpAddress()
+    {
+        return $this->ipAddress;
+    }
+
+    /**
+     * @param string $ipAddress
+     * @return $this
+     */
+    public function setIpAddress($ipAddress)
+    {
+        $this->ipAddress = $ipAddress;
+        return $this;
+    }
+
+    /**
+     * @return float
+     */
+    public function getDiscountClient()
+    {
+        return $this->discountClient;
+    }
+
+    /**
+     * @param float $discountClient
+     * @return $this
+     */
+    public function setDiscountClient($discountClient)
+    {
+        $this->discountClient = $discountClient;
+        return $this;
+    }
+
+    /**
+     * @return float
+     */
+    public function getDiscountGroup()
+    {
+        return $this->discountGroup;
+    }
+
+    /**
+     * @param float $discountGroup
+     * @return $this
+     */
+    public function setDiscountGroup($discountGroup)
+    {
+        $this->discountGroup = $discountGroup;
+        return $this;
+    }
+
+    /**
+     * @return float
+     */
+    public function getDiscountLevels()
+    {
+        return $this->discountLevels;
+    }
+
+    /**
+     * @param float $discountLevels
+     * @return $this
+     */
+    public function setDiscountLevels($discountLevels)
+    {
+        $this->discountLevels = $discountLevels;
+        return $this;
+    }
+
+    /**
+     * @return float
+     */
+    public function getDiscountCode()
+    {
+        return $this->discountCode;
+    }
+
+    /**
+     * @param float $discountCode
+     * @return $this
+     */
+    public function setDiscountCode($discountCode)
+    {
+        $this->discountCode = $discountCode;
+        return $this;
+    }
+
+    /**
+     * @return float
+     */
+    public function getShippingVatValue()
+    {
+        return $this->shippingVatValue;
+    }
+
+    /**
+     * @param float $shippingVatValue
+     * @return $this
+     */
+    public function setShippingVatValue($shippingVatValue)
+    {
+        $this->shippingVatValue = $shippingVatValue;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getShippingVatName()
+    {
+        return $this->shippingVatName;
+    }
+
+    /**
+     * @param string $shippingVatName
+     * @return $this
+     */
+    public function setShippingVatName($shippingVatName)
+    {
+        $this->shippingVatName = $shippingVatName;
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getOrigin()
+    {
+        return $this->origin;
+    }
+
+    /**
+     * @param int $origin
+     * @return $this
+     */
+    public function setOrigin($origin)
+    {
+        $this->origin = $origin;
         return $this;
     }
 

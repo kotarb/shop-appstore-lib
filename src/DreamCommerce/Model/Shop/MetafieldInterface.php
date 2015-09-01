@@ -4,13 +4,6 @@ namespace DreamCommerce\Model\Shop;
 
 interface MetafieldInterface extends ResourceDependentInterface
 {
-    const TYPE_INT = 1;
-    const TYPE_FLOAT = 2;
-    const TYPE_STRING = 3;
-    const TYPE_BLOB = 4;
-
-    const RESOURCE_SYSTEM = 'system';
-
     /**
      * @return MetafieldValueInterface
      */

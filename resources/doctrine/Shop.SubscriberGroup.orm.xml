@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+    <entity name="DreamCommerce\Model\Shop\SubscribersGroup" table="subscribers_groups">
+        <indexes>
+            <index name="name" columns="name" />
+        </indexes>
+
+        <id name="shopId" type="integer" column="shop_id" />
+        <id name="groupId" type="integer" column="group_id" />
+
+        <field name="name" type="string" column="name" length="255" nullable="false"/>
+
+        <many-to-many field="subscribers" target-entity="DreamCommerce\Model\Shop\Subscriber">
+            <join-table name="subscribers_groups_subscribers">
+                <join-columns>
+                    <join-column name="group_id" referenced-column-name="group_id" />
+                </join-columns>
+                <inverse-join-columns>
+                    <join-column name="subscriber_id" referenced-column-name="subscriber_id" />
+                </inverse-join-columns>
+            </join-table>
+        </many-to-many>
+
+        <many-to-one field="shop" target-entity="DreamCommerce\Model\Shop">
+            <join-columns>
+                <join-column name="shop_id" referenced-column-name="shop_id" />
+            </join-columns>
+        </many-to-one>
+    </entity>
+</doctrine-mapping>

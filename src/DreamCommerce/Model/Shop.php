@@ -10,24 +10,29 @@ class Shop implements ShopInterface
     protected $shopId;
 
     /**
+     * @var string $shopUniqId
+     */
+    protected $shopUniqId;
+
+    /**
      * @var \DateTime $creationDate
      */
     protected $creationDate;
 
     /**
-     * @var string $shopToken
+     * @var string $url
      */
-    protected $shopToken;
+    protected $url;
 
     /**
-     * @var string $shopUrl
+     * @var string version
      */
-    protected $shopUrl;
+    protected $version;
 
     /**
-     * @var TokenInterface $accessToken
+     * @var TokenInterface $token
      */
-    protected $accessToken;
+    protected $token;
 
     /**
      * @var \ArrayAccess $billings
@@ -54,7 +59,35 @@ class Shop implements ShopInterface
     }
 
     /**
-     * @return \Datetime
+     * @param int $shopId
+     * @return $this
+     */
+    public function setShopId($shopId)
+    {
+        $this->shopId = $shopId;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getShopUniqId()
+    {
+        return $this->shopUniqId;
+    }
+
+    /**
+     * @param string $shopUniqId
+     * @return $this
+     */
+    public function setShopUniqId($shopUniqId)
+    {
+        $this->shopUniqId = $shopUniqId;
+        return $this;
+    }
+
+    /**
+     * @return \DateTime
      */
     public function getCreationDate()
     {
@@ -62,7 +95,7 @@ class Shop implements ShopInterface
     }
 
     /**
-     * @param \Datetime $creationDate
+     * @param \DateTime $creationDate
      * @return $this
      */
     public function setCreationDate($creationDate)
@@ -74,54 +107,65 @@ class Shop implements ShopInterface
     /**
      * @return string
      */
-    public function getShopToken()
+    public function getUrl()
     {
-        return $this->shopToken;
+        return $this->url;
     }
 
     /**
-     * @param string $shopToken
+     * @param string $url
      * @return $this
      */
-    public function setShopToken($shopToken)
+    public function setUrl($url)
     {
-        $this->shopToken = $shopToken;
+        $this->url = $url;
         return $this;
     }
 
     /**
      * @return string
      */
-    public function getShopUrl()
+    public function getVersion()
     {
-        return $this->shopUrl;
+        return $this->version;
     }
 
     /**
-     * @param string $shopUrl
-     * @return $this
+     * @param string $version
      */
-    public function setShopUrl($shopUrl)
+    public function setVersion($version)
     {
-        $this->shopUrl = $shopUrl;
-        return $this;
+        $this->version = $version;
+    }
+
+    /**
+     * @param  string  $version  A version string (e.g. "0.7.1").
+     * @return int           -1 if the $version is older,
+     *                           0 if they are the same,
+     *                           and +1 if $version is newer.
+     */
+    public function compareVersion($version)
+    {
+        $version = strtolower($version);
+        $version = preg_replace('/(\d)pr(\d?)/', '$1a$2', $version);
+        return version_compare($version, strtolower($this->version));
     }
 
     /**
      * @return TokenInterface
      */
-    public function getAccessToken()
+    public function getToken()
     {
-        return $this->accessToken;
+        return $this->token;
     }
 
     /**
-     * @param TokenInterface $accessToken
+     * @param TokenInterface $token
      * @return $this
      */
-    public function setAccessToken(TokenInterface $accessToken)
+    public function setToken(TokenInterface $token)
     {
-        $this->accessToken = $accessToken;
+        $this->token = $token;
         return $this;
     }
 

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+    <entity name="DreamCommerce\Model\Shop\OrderAdditionalField" table="orders_additional_fields">
+        <indexes>
+            <index name="field" columns="shop_id, field_id"/>
+        </indexes>
+
+        <id name="shopId" type="integer" column="shop_id" />
+        <id name="orderId" type="integer" column="order_id" />
+        <id name="valueId" type="integer" column="value_id" />
+
+        <field name="value" type="string" column="value" length="255" nullable="false"/>
+
+        <many-to-one field="order" target-entity="DreamCommerce\Model\Shop\Order">
+            <join-columns>
+                <join-column name="order_id" referenced-column-name="order_id"/>
+            </join-columns>
+        </many-to-one>
+
+        <many-to-one field="field" target-entity="DreamCommerce\Model\Shop\AdditionalField">
+            <join-columns>
+                <join-column name="field_id" referenced-column-name="field_id"/>
+            </join-columns>
+        </many-to-one>
+
+        <many-to-one field="shop" target-entity="DreamCommerce\Model\Shop">
+            <join-columns>
+                <join-column name="shop_id" referenced-column-name="shop_id"/>
+            </join-columns>
+        </many-to-one>
+    </entity>
+</doctrine-mapping>

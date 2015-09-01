@@ -2,7 +2,7 @@
 
 namespace DreamCommerce\Model\Shop;
 
-interface OrderAdditionalFieldInterface extends ShopDependentInterface
+interface AdditionalFieldTranslationInterface extends TranslationInterface, ShopDependentInterface
 {
     /**
      * @return AdditionalFieldInterface
@@ -14,15 +14,4 @@ interface OrderAdditionalFieldInterface extends ShopDependentInterface
      * @return $this
      */
     public function setAdditionalField(AdditionalFieldInterface $additionalField);
-
-    /**
-     * @return OrderInterface
-     */
-    public function getOrder();
-
-    /**
-     * @param OrderInterface $order
-     * @return $this
-     */
-    public function setOrder(OrderInterface $order);
 }

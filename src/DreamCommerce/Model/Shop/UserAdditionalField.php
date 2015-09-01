@@ -2,7 +2,7 @@
 
 namespace DreamCommerce\Model\Shop;
 
-abstract class UserAdditionalField extends AdditionalField implements UserAdditionalFieldInterface
+abstract class UserAdditionalField extends ShopDependent implements UserAdditionalFieldInterface
 {
     /**
      * @var string
@@ -13,6 +13,11 @@ abstract class UserAdditionalField extends AdditionalField implements UserAdditi
      * @var UserInterface
      */
     protected $user;
+
+    /**
+     * @var AdditionalFieldInterface
+     */
+    protected $additionalField;
 
     /**
      * @return string
@@ -47,6 +52,24 @@ abstract class UserAdditionalField extends AdditionalField implements UserAdditi
     public function setUser(UserInterface $user)
     {
         $this->user = $user;
+        return $this;
+    }
+
+    /**
+     * @return AdditionalFieldInterface
+     */
+    public function getAdditionalField()
+    {
+        return $this->additionalField;
+    }
+
+    /**
+     * @param AdditionalFieldInterface $additionalField
+     * @return $this
+     */
+    public function setAdditionalField(AdditionalFieldInterface $additionalField)
+    {
+        $this->additionalField = $additionalField;
         return $this;
     }
 }

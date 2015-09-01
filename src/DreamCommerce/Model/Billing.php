@@ -38,24 +38,6 @@ class Billing implements BillingInterface
     }
 
     /**
-     * @return ShopInterface
-     */
-    public function getShop()
-    {
-        return $this->shop;
-    }
-
-    /**
-     * @param ShopInterface $shop
-     * @return $this
-     */
-    public function setShop(ShopInterface $shop)
-    {
-        $this->shop = $shop;
-        return $this;
-    }
-
-    /**
      * @return \DateTime
      */
     public function getCreationDate()
@@ -70,6 +52,24 @@ class Billing implements BillingInterface
     public function setCreationDate($creationDate)
     {
         $this->creationDate = $creationDate;
+        return $this;
+    }
+
+    /**
+     * @return ShopInterface
+     */
+    public function getShop()
+    {
+        return $this->shop;
+    }
+
+    /**
+     * @param ShopInterface $shop
+     * @return $this
+     */
+    public function setShop(ShopInterface $shop)
+    {
+        $this->shop = $shop;
         return $this;
     }
 }

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+    <entity name="DreamCommerce\Model\Shop\AdditionalField" table="additional_fields">
+
+        <indexes>
+            <index name="locate_order" columns="shop_id, locate, order" />
+            <index name="locate_active_order" columns="shop_id, locate, active, order" />
+        </indexes>
+
+        <id name="shopId" type="integer" column="shop_id" />
+        <id name="fieldId" type="integer" column="field_id" />
+
+        <field name="type" type="boolean" column="type" nullable="false"/>
+        <field name="locate" type="boolean" column="locate" nullable="false"/>
+        <field name="req" type="boolean" column="req" nullable="false"/>
+        <field name="active" type="boolean" column="active" nullable="false"/>
+        <field name="order" type="integer" column="order" nullable="false"/>
+
+        <many-to-one field="shop" target-entity="DreamCommerce\Model\Shop">
+            <join-columns>
+                <join-column name="shop_id" referenced-column-name="shop_id"/>
+            </join-columns>
+        </many-to-one>
+    </entity>
+</doctrine-mapping>

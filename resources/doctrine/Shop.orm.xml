@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="DreamCommerce\Model\Shop" table="shops">
+
+        <indexes>
+            <index name="shop_uniq_id" columns="shop_uniq_id" />
+            <index name="shop_url" columns="shop_url" />
+            <index name="creation_date" columns="creation_date" />
+        </indexes>
+
+        <id name="shopId" column="shop_id" type="int">
+            <generator strategy="IDENTITY" />
+        </id>
+
+        <one-to-one target-entity="DreamCommerce\Model\Token" mapped-by="shop" field="token" inversed-by="token">
+            <cascade>
+                <cascade-remove/>
+            </cascade>
+        </one-to-one>
+        
+        <one-to-one target-entity="DreamCommerce\Model\Billing" mapped-by="shop" field="billing" inversed-by="billing">
+            <cascade>
+                <cascade-remove/>
+            </cascade>
+        </one-to-one>
+
+        <one-to-many target-entity="DreamCommerce\Model\Subscription" mapped-by="shop" field="subscriptions">
+            <cascade>
+                <cascade-remove/>
+            </cascade>
+            <order-by>
+                <order-by-field name="expiresAt" direction="DESC"/>
+            </order-by>
+        </one-to-many>
+
+        <one-to-many target-entity="DreamCommerce\Model\Shop\AdditionalField" mapped-by="shop" field="additionalFields">
+            <cascade>
+                <cascade-remove/>
+            </cascade>
+        </one-to-many>
+
+        <field name="shopUniqId" column="shop_uniq_id" length="40" />
+        <field name="creationDate" column="creation_date" type="datetime" />
+        <field name="shopUrl" column="shop_url" length="512" />
+    </entity>
+</doctrine-mapping>

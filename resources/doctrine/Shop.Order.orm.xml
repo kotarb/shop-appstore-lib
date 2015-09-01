@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+    <entity name="DreamCommerce\Model\Shop\Order" table="orders">
+        <indexes>
+            <index name="user_status" columns="shop_id, user_id, status_id"/>
+            <index name="confirm" columns="shop_id, confirm"/>
+            <index name="status_id" columns="shop_id, status_id"/>
+            <index name="payment_id" columns="shop_id, payment_id"/>
+            <index name="shipping_id" columns="shop_id, shipping_id"/>
+            <index name="currency_id" columns="shop_id, currency_id"/>
+            <index name="shipping_vat" columns="shop_id, shipping_vat"/>
+            <index name="language_id" columns="shop_id, language_id"/>
+            <index name="code_id" columns="shop_id, code_id"/>
+            <index name="origin" columns="shop_id, origin"/>
+        </indexes>
+
+        <id name="shopId" type="integer" column="shop_id" />
+        <id name="orderId" type="integer" column="order_id" />
+
+        <field name="date" type="datetime" column="date" nullable="false"/>
+        <field name="statusDate" type="datetime" column="status_date" nullable="false"/>
+        <field name="confirmDate" type="datetime" column="confirm_date" nullable="false"/>
+        <field name="deliveryDate" type="date" column="delivery_date" nullable="false"/>
+        <field name="sum" type="float" column="sum" precision="13" scale="2" nullable="false"/>
+        <field name="userOrder" type="boolean" column="user_order" nullable="false"/>
+        <field name="shippingCost" type="float" column="shipping_cost" precision="13" scale="2" nullable="false"/>
+        <field name="email" type="string" column="email" length="100" nullable="false"/>
+        <field name="deliveryCode" type="string" column="delivery_code" length="100" nullable="false"/>
+        <field name="code" type="string" column="code" length="32" nullable="false"/>
+        <field name="confirm" type="boolean" column="confirm" nullable="false"/>
+        <field name="notes" type="text" column="notes" nullable="false"/>
+        <field name="notesPriv" type="text" column="notes_priv" nullable="false"/>
+        <field name="notesPub" type="text" column="notes_pub" nullable="false"/>
+        <field name="currencyRate" type="float" column="currency_rate" precision="10" scale="0" nullable="false"/>
+        <field name="paid" type="float" column="paid" precision="13" scale="2" nullable="false"/>
+        <field name="ipAddress" type="string" column="ip_address" length="39" nullable="false"/>
+        <field name="discountClient" type="float" column="discount_client" precision="10" scale="0" nullable="false"/>
+        <field name="discountGroup" type="float" column="discount_group" precision="10" scale="0" nullable="false"/>
+        <field name="discountLevels" type="float" column="discount_levels" precision="10" scale="0" nullable="false"/>
+        <field name="discountCode" type="float" column="discount_code" precision="10" scale="0" nullable="false"/>
+        <field name="shippingVatValue" type="float" column="shipping_vat_value" precision="10" scale="0" nullable="false"/>
+        <field name="shippingVatName" type="string" column="shipping_vat_name" length="50" nullable="false"/>
+        <field name="origin" type="smallint" column="origin" nullable="false"/>
+
+        <many-to-one field="user" target-entity="DreamCommerce\Model\Shop\User">
+            <join-columns>
+                <join-column name="user_id" referenced-column-name="user_id"/>
+            </join-columns>
+        </many-to-one>
+
+        <many-to-one field="status" target-entity="DreamCommerce\Model\Shop\Status">
+            <join-columns>
+                <join-column name="status_id" referenced-column-name="status_id"/>
+            </join-columns>
+        </many-to-one>
+
+        <many-to-one field="tax" target-entity="DreamCommerce\Model\Shop\Tax">
+            <join-columns>
+                <join-column name="tax_id" referenced-column-name="tax_id"/>
+            </join-columns>
+        </many-to-one>
+
+        <many-to-one field="currency" target-entity="DreamCommerce\Model\Shop\Currency">
+            <join-columns>
+                <join-column name="currency_id" referenced-column-name="currency_id"/>
+            </join-columns>
+        </many-to-one>
+
+        <many-to-one field="payment" target-entity="DreamCommerce\Model\Shop\Payment">
+            <join-columns>
+                <join-column name="payment_id" referenced-column-name="payment_id"/>
+            </join-columns>
+        </many-to-one>
+
+        <many-to-one field="shipping" target-entity="DreamCommerce\Model\Shop\Shipping">
+            <join-columns>
+                <join-column name="shipping_id" referenced-column-name="shipping_id"/>
+            </join-columns>
+        </many-to-one>
+
+        <many-to-one field="language" target-entity="DreamCommerce\Model\Shop\Language">
+            <join-columns>
+                <join-column name="language_id" referenced-column-name="language_id"/>
+            </join-columns>
+        </many-to-one>
+
+        <one-to-one target-entity="DreamCommerce\Model\OrderAddress" mapped-by="order" field="billingAddress" inversed-by="billingAddress">
+            <cascade>
+                <cascade-remove/>
+            </cascade>
+        </one-to-one>
+
+        <one-to-one target-entity="DreamCommerce\Model\OrderAddress" mapped-by="order" field="deliveryAddress" inversed-by="deliveryAddress">
+            <cascade>
+                <cascade-remove/>
+            </cascade>
+        </one-to-one>
+
+        <many-to-one field="shop" target-entity="DreamCommerce\Model\Shop">
+            <join-columns>
+                <join-column name="shop_id" referenced-column-name="shop_id"/>
+            </join-columns>
+        </many-to-one>
+    </entity>
+</doctrine-mapping>

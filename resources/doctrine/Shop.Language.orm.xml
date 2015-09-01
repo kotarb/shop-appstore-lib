@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+    <entity name="DreamCommerce\Model\Shop\Language" table="languages">
+        <indexes>
+            <index name="currency_id" columns="shop_id, currency_id"/>
+            <index name="active" columns="shop_id, active, order"/>
+            <index name="order" columns="shop_id, order" />
+        </indexes>
+
+        <unique-constraints>
+            <unique-constraint name="languges_locale" columns="locale" />
+        </unique-constraints>
+
+        <id name="shopId" type="integer" column="shop_id" />
+        <id name="languageId" type="integer" column="language_id" />
+
+        <field name="locale" type="string" column="locale" length="20" nullable="false"/>
+        <field name="active" type="boolean" column="active" nullable="false"/>
+        <field name="order" type="integer" column="order" nullable="false"/>
+
+        <many-to-one field="currency" target-entity="DreamCommerce\Model\Shop\Currency">
+            <join-columns>
+                <join-column name="currency_id" referenced-column-name="currency_id" />
+            </join-columns>
+        </many-to-one>
+
+        <many-to-one field="shop" target-entity="DreamCommerce\Model\Shop">
+            <join-columns>
+                <join-column name="shop_id" referenced-column-name="shop_id"/>
+            </join-columns>
+        </many-to-one>
+    </entity>
+</doctrine-mapping>

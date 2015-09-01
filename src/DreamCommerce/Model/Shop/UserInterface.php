@@ -4,11 +4,6 @@ namespace DreamCommerce\Model\Shop;
 
 interface UserInterface extends LanguageDependentInterface, ResourceDependentInterface
 {
-    const ORIGIN_USER_SHOP = 0;
-    const ORIGIN_USER_FACEBOOK = 1;
-    const ORIGIN_USER_MOBILE = 2;
-    const ORIGIN_USER_ALLEGRO = 3;
-
     /**
      * @return \ArrayAccess
      */

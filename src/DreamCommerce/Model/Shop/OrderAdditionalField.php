@@ -2,7 +2,7 @@
 
 namespace DreamCommerce\Model\Shop;
 
-abstract class OrderAdditionalField extends AdditionalField implements  OrderAdditionalFieldInterface
+abstract class OrderAdditionalField extends ShopDependent implements OrderAdditionalFieldInterface
 {
     /**
      * @var string
@@ -13,6 +13,11 @@ abstract class OrderAdditionalField extends AdditionalField implements  OrderAdd
      * @var OrderInterface
      */
     protected $order;
+
+    /**
+     * @var AdditionalFieldInterface
+     */
+    protected $additionalField;
 
     /**
      * @return string
@@ -29,6 +34,24 @@ abstract class OrderAdditionalField extends AdditionalField implements  OrderAdd
     public function setValue($value)
     {
         $this->value = $value;
+        return $this;
+    }
+
+    /**
+     * @return AdditionalFieldInterface
+     */
+    public function getAdditionalField()
+    {
+        return $this->additionalField;
+    }
+
+    /**
+     * @param AdditionalFieldInterface $additionalField
+     * @return $this
+     */
+    public function setAdditionalField(AdditionalFieldInterface $additionalField)
+    {
+        $this->additionalField = $additionalField;
         return $this;
     }
 

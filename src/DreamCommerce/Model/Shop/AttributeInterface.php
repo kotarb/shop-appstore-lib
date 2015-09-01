@@ -4,10 +4,6 @@ namespace DreamCommerce\Model\Shop;
 
 interface AttributeInterface extends ResourceDependentInterface
 {
-    const ATTRIBUTE_TYPE_TEXT = 0;
-    const ATTRIBUTE_TYPE_CHECKBOX = 1;
-    const ATTRIBUTE_TYPE_SELECT = 2;
-
     /**
      * @return AttributeGroupInterface
      */
