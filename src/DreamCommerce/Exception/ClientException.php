@@ -1,13 +1,16 @@
 <?php
+
 namespace DreamCommerce\Exception;
+
 use DreamCommerce\Exception;
 
 /**
  * Class ClientException
- * @package DreamCommerce
+ *
+ * @package DreamCommerce\Exception
  */
-class ClientException extends Exception{
-
+class ClientException extends Exception
+{
     /**
      * error occurs when cannot determine more detailed information
      */

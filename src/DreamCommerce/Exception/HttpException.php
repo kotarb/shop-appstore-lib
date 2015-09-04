@@ -1,13 +1,16 @@
 <?php
+
 namespace DreamCommerce\Exception;
+
 use DreamCommerce\Exception;
 
 /**
  * Class HttpException
+ *
  * @package DreamCommerce\Exception
  */
-class HttpException extends \Exception{
-
+class HttpException extends Exception
+{
     /**
      * specified HTTP request method is not supported
      */

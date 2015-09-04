@@ -1,0 +1,8 @@
+<?php
+
+namespace DreamCommerce\Model\Entity\Shop;
+
+class ProductOptionText extends ProductOption
+{
+    
+}
