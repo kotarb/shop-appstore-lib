@@ -1,6 +1,6 @@
 <?php
 
-namespace DreamCommerce\Hydrator\Webhook\Model;
+namespace DreamCommerce\Model\Hydrator\Webhook;
 
 use DreamCommerce\Exception;
 use DreamCommerce\Model\Manager as ModelManager;

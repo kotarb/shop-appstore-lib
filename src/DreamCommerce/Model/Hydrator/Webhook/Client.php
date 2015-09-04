@@ -1,6 +1,6 @@
 <?php
 
-namespace DreamCommerce\Hydrator\Webhook\Model;
+namespace DreamCommerce\Model\Hydrator\Webhook;
 
 use DreamCommerce\Exception;
 use DreamCommerce\Model\Hydrator\Base as BaseHydrator;
@@ -10,7 +10,6 @@ use DreamCommerce\Model\Entity\Shop\UserAdditionalFieldInterface;
 use DreamCommerce\Model\Entity\Shop\UserAddressInterface;
 use DreamCommerce\Model\Entity\Shop\UserGroupInterface;
 use DreamCommerce\Model\Entity\Shop\UserInterface;
-use DreamCommerce\Model\Provider\Skeleton;
 
 class Client extends BaseHydrator
 {
