@@ -2,6 +2,8 @@
 
 namespace DreamCommerce;
 
+use DreamCommerce\Model\Entity\ApplicationInterface;
+use DreamCommerce\Model\Entity\ShopInterface;
 use DreamCommerce\Exception\ClientException;
 use DreamCommerce\Exception\HttpException;
 use Psr\Log\LoggerInterface;
@@ -59,33 +61,20 @@ use Psr\Log\LoggerInterface;
 class Client implements ClientInterface
 {
     /**
-     * API entrypoint
-     * @var null|string
+     * @var ApplicationInterface
      */
-    protected $entrypoint = null;
+    protected $application;
 
     /**
-     * OAuth ID
-     * @var null|string
+     * @var ShopInterface
      */
-    protected $clientId = null;
-    /**
-     * OAuth secret
-     * @var null|string
-     */
-    protected $clientSecret = null;
+    protected $shop;
 
     /**
      * HTTP Client handle
      * @var Http|null
      */
     protected $httpClient = null;
-
-    /**
-     * access token
-     * @var string
-     */
-    protected $accessToken = null;
 
     /**
      * @var LoggerInterface
@@ -103,30 +92,13 @@ class Client implements ClientInterface
     protected $locale = 'en_US';
 
     /**
-     * @param string $entrypoint shop url
-     * @param string $clientId
-     * @param string $clientSecret
-     * @throws Exception\ClientException
+     * @param ApplicationInterface $application
+     * @param ShopInterface $shop
      */
-    public function __construct($entrypoint, $clientId, $clientSecret)
+    public function __construct(ApplicationInterface $application, ShopInterface $shop)
     {
-        if(!filter_var($entrypoint, FILTER_VALIDATE_URL)){
-            throw new ClientException('Invalid entrypoint URL', ClientException::ENTRYPOINT_URL_INVALID);
-        }
-
-        // adjust base URL
-        if($entrypoint[strlen($entrypoint)-1]=='/'){
-            $entrypoint = substr($entrypoint, 0, -1);
-        }
-
-        // adjust webapi query
-        if(strpos($entrypoint, '/webapi/rest')===false){
-            $entrypoint .= '/webapi/rest';
-        }
-
-        $this->entrypoint = $entrypoint;
-        $this->clientId = $clientId;
-        $this->clientSecret = $clientSecret;
+        $this->application = $application;
+        $this->shop = $shop;
     }
 
     /**
@@ -134,20 +106,23 @@ class Client implements ClientInterface
      */
     public function getToken($authCode)
     {
-        $res = $this->getHttpClient()->post($this->entrypoint.'/oauth/token', array(
-            'code'=>$authCode
-        ), array(
-            'grant_type'=>'authorization_code'
-        ), array(
-            'Authorization'=>'Basic '.base64_encode($this->clientId.':'.$this->clientSecret)
-        ));
+        $res = $this->getHttpClient()->post(
+            $this->shop->getEntryPoint() . '/oauth/token',
+            array(
+                'code' => $authCode
+            ), array(
+                'grant_type' => 'authorization_code'
+            ), array(
+                'Authorization' => 'Basic ' . base64_encode($this->application->getClientId() . ':' . $this->application->getClientSecret())
+            )
+        );
 
         if(!$res || isset($res['data']['error'])){
             throw new ClientException($res['data']['error'], ClientException::API_ERROR);
         }
 
         // automatically set token to the freshly requested
-        $this->setAccessToken($res['data']['access_token']);
+        $this->shop->setAccessToken($res['data']['access_token']);
 
         return $res['data'];
     }
@@ -157,30 +132,24 @@ class Client implements ClientInterface
      */
     public function refreshToken($refreshToken)
     {
-        $res = $this->getHttpClient()->post($this->entrypoint.'/oauth/token', array(
-            'client_id'=>$this->clientId,
-            'client_secret'=>$this->clientSecret,
-            'refresh_token'=>$refreshToken
-        ), array(
-            'grant_type'=>'refresh_token'
-        ));
+        $res = $this->getHttpClient()->post(
+            $this->shop->getEntryPoint() . '/oauth/token',
+            array(
+                'client_id' => $this->application->getClientId(),
+                'client_secret' => $this->application->getClientSecret(),
+                'refresh_token' => $refreshToken
+            ), array(
+                'grant_type'=>'refresh_token'
+            )
+        );
 
         if(!$res || !empty($res['data']['error'])){
             throw new ClientException($res['error'], ClientException::API_ERROR);
         }
 
-        $this->setAccessToken($res['data']['access_token']);
+        $this->shop->setAccessToken($res['data']['access_token']);
 
         return $res['data'];
-    }
-
-    /**
-     * Sets an access token for further requests
-     * @param $token
-     */
-    public function setAccessToken($token)
-    {
-        $this->accessToken = $token;
     }
 
     /**
@@ -193,7 +162,7 @@ class Client implements ClientInterface
             throw new ClientException('Method not supported', ClientException::METHOD_NOT_SUPPORTED);
         }
 
-        $url = $this->entrypoint.'/'.$res->getName();
+        $url = $this->shop->getEntryPoint() . '/' . $res->getName();
         if($objectPath){
             if(is_array($objectPath)){
                 $objectPath = join('/', $objectPath);
@@ -203,7 +172,7 @@ class Client implements ClientInterface
 
         // setup OAuth token and we request JSON
         $headers = array(
-            'Authorization'=>'Bearer '.$this->accessToken,
+            'Authorization'=>'Bearer '.$this->shop->getaccessToken,
             'Content-Type'=>'application/json',
             'Accept-Language' => $this->locale . ';q=0.8'
         );

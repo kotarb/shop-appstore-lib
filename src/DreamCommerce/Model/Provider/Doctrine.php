@@ -5,16 +5,37 @@ namespace DreamCommerce\Model\Provider;
 use DreamCommerce\Model\Entity\ShopDependentInterface;
 use DreamCommerce\Model\Entity\ShopInterface;
 
-class Doctrine implements ProviderInterface
+class Doctrine extends Skeleton
 {
     /**
-     * @param string $objectName
-     * @param int|null $objectId
-     * @param ShopInterface|null $shop
-     * @return ShopDependentInterface
+     * {@inheritdoc}
      */
-    public static function getModel($objectName, $objectId = null, ShopInterface $shop = null)
+    public function find(ShopInterface $shop, $objectName, $objectId)
     {
-        // TODO: Implement getModel() method.
+
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function prePersist(ShopDependentInterface $object)
+    {
+
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function persist(ShopDependentInterface $object)
+    {
+
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function postPersist(ShopDependentInterface $object)
+    {
+
     }
 }

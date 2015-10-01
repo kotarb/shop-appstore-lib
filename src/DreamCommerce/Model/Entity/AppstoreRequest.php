@@ -4,7 +4,7 @@ namespace DreamCommerce\Model\Entity;
 
 use DreamCommerce\Model\Entity\Shop\WebhookInterface;
 
-class WebhookRequest extends ShopDependent
+class AppstoreRequest extends ShopDependent
 {
     /**
      * @var string

@@ -4,53 +4,163 @@ namespace DreamCommerce\Model\Provider;
 
 use DreamCommerce\Exception\ModelException;
 use DreamCommerce\Model\Entity\Shop\ResourceDependentInterface;
-use DreamCommerce\Model\Manager as ModelManager;
 use DreamCommerce\Model\Entity\ShopDependentInterface;
 use DreamCommerce\Model\Entity\ShopInterface;
 
 class Skeleton implements ProviderInterface
 {
+    private $instances = array();
+
     /**
      * @var array
      */
     private static $classMapping = array();
 
     /**
-     * @param string $objectName
-     * @param int|null $objectId
-     * @param ShopInterface|null $shop
+     * {@inheritdoc}
      * @throws ModelException
-     * @return ShopDependentInterface
      */
-    public static function getModel($objectName, $objectId = null, ShopInterface $shop = null)
+    public function find(ShopInterface $shop, $objectName, $objectId, $fromInstanceCache = false)
     {
-        if($shop === null) {
-            $shop = ModelManager::getDefaultShop();
+        $this->preFind($shop, $objectName, $objectId);
+
+        $classname = self::getClass($objectName);
+        /** @var ShopDependentInterface $object */
+        $object = new $classname();
+        if(! $object instanceof ShopDependentInterface) {
+            throw new ModelException();
         }
+        $object->setShop($shop);
+
+        if ($object instanceof ResourceDependentInterface) {
+            /** @var ResourceDependentInterface $object */
+            $object->setResourceId($objectId);
+        }
+
+        $this->postFind($shop, $objectName, $objectId, $object);
+        return $object;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function persist(ShopDependentInterface $object)
+    {
+        $this->prePersist($object);
+
+        // do nothing ...
+
+        $this->postPersist($object, true);
+
+        return true;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function delete(ShopDependentInterface $object)
+    {
+        $this->preDelete($object);
+
+        // do nothing ...
+
+        $this->postDelete($object, true);
+
+        return true;
+    }
+
+
+    /**
+     * @param ShopInterface $shop
+     * @param $objectName
+     * @param $objectId
+     * @return ShopDependentInterface|boolean
+     */
+    public function getInstanceCache(ShopInterface $shop, $objectName, $objectId)
+    {
+
+    }
+
+    /**
+     * @param ShopInterface|null $shop
+     * @param string|null $objectName
+     * @param integer|null $objectId
+     * @return boolean
+     */
+    public function cleanInstanceCache(ShopInterface $shop = null, $objectName = null, $objectId = null)
+    {
+
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function preFind(ShopInterface $shop, $objectName, $objectId = null)
+    {
+        // do nothing ...
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function postFind(ShopInterface $shop, $objectName, $objectId = null, ShopDependentInterface $object)
+    {
+        // do nothing ...
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function prePersist(ShopDependentInterface $object)
+    {
+        // do nothing ...
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function postPersist(ShopDependentInterface $object, $result)
+    {
+        // do nothing ...
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function preDelete(ShopDependentInterface $object)
+    {
+        // do nothing ...
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function postDelete(ShopDependentInterface $object, $result)
+    {
+        // do nothing ...
+    }
+
+
+    /**
+     * @param string $objectName
+     * @return string
+     * @throws ModelException
+     */
+    public static function getClass($objectName)
+    {
         $objectName = ucfirst($objectName);
 
         if(isset(self::$classMapping[$objectName])) {
-            /** @var ShopDependentInterface $object */
-            $object = new self::$classMapping[$objectName]();
+            $className = self::$classMapping[$objectName];
         } else {
             $className = '\\DreamCommerce\\Model\\Shop\\' . $objectName;
-            if (!class_exists($className)) {
-                throw new ModelException('Class "' . $className . '" does not exists');
-            }
-            /** @var ShopDependentInterface $object */
-            $object = new $className;
         }
 
-        $object->setShop($shop);
-
-        if($objectId !== null) {
-            if ($object instanceof ResourceDependentInterface) {
-                /** @var ResourceDependentInterface $object */
-                $object->setResourceId($objectId);
-            }
+        if (!class_exists($className)) {
+            throw new ModelException('Class "' . $className . '" does not exists');
         }
 
-        return $object;
+        return $className;
     }
 
     /**

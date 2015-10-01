@@ -5,6 +5,11 @@ namespace DreamCommerce\Model\Entity;
 class Subscription extends ShopDependent implements SubscriptionInterface
 {
     /**
+     * @var ApplicationInterface
+     */
+    protected $application;
+
+    /**
      * @var int
      */
     protected $subscriptionId;
@@ -47,6 +52,24 @@ class Subscription extends ShopDependent implements SubscriptionInterface
     public function setExpirationDate($expirationDate)
     {
         $this->expirationDate = $expirationDate;
+        return $this;
+    }
+
+    /**
+     * @return ApplicationInterface
+     */
+    public function getApplication()
+    {
+        return $this->application;
+    }
+
+    /**
+     * @param ApplicationInterface $application
+     * @return $this
+     */
+    public function setApplication(ApplicationInterface $application)
+    {
+        $this->application = $application;
         return $this;
     }
 }

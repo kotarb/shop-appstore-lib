@@ -3,7 +3,7 @@
 namespace DreamCommerce\Model\Hydrator\Webhook;
 
 use DreamCommerce\Exception;
-use DreamCommerce\Model\Hydrator\Base as BaseHydrator;
+use DreamCommerce\Model\Hydrator\Webhook as WebhookHydrator;
 use DreamCommerce\Model\Manager as ModelManager;
 use DreamCommerce\Model\Entity\Shop\LanguageInterface;
 use DreamCommerce\Model\Entity\Shop\UserAdditionalFieldInterface;
@@ -11,7 +11,7 @@ use DreamCommerce\Model\Entity\Shop\UserAddressInterface;
 use DreamCommerce\Model\Entity\Shop\UserGroupInterface;
 use DreamCommerce\Model\Entity\Shop\UserInterface;
 
-class Client extends BaseHydrator
+class Client extends WebhookHydrator
 {
     /**
      * Hydrate $object with the provided $data.
@@ -26,14 +26,14 @@ class Client extends BaseHydrator
 
         if(isset($data['lang_id'])) {
             /** @var LanguageInterface $language */
-            $language = ModelManager::getModel('language', $data['lang_id'], $shop);
+            $language = $this->manager->find($shop, 'language', $data['lang_id']);
             $user->setLanguage($language);
         }
 
         if(isset($data['groups'])) {
             foreach($data['groups'] as $groupData) {
                 /** @var UserGroupInterface $userGroup */
-                $userGroup = ModelManager::getModel('userGroup', $data['group_id'], $shop, ModelManager::PROVIDER_SKELETON);
+                $userGroup = $this->manager->find($shop, 'userGroup', $data['group_id'], true, ModelManager::PROVIDER_WEBHOOK);
                 $this->fillModel($groupData, $userGroup);
                 $user->addGroup($userGroup);
             }
@@ -47,7 +47,7 @@ class Client extends BaseHydrator
                 }
 
                 /** @var UserAddressInterface $userAddress */
-                $userAddress = ModelManager::getModel('userAddress', $data['address_book_id'], $shop, ModelManager::PROVIDER_SKELETON);
+                $userAddress = $this->manager->find($shop, 'userAddress', $data['address_book_id'], true, ModelManager::PROVIDER_WEBHOOK);
                 $userAddress->setUser($user);
                 $this->fillModel($addressData, $userAddress);
                 $user->addAddress($userAddress);
@@ -58,7 +58,7 @@ class Client extends BaseHydrator
         if(isset($data['additional_fields'])) {
             foreach($data['additional_fields'] as $additionalData) {
                 /** @var UserAdditionalFieldInterface $additionalField */
-                $additionalField = ModelManager::getModel('userAdditionalField', $additionalData['field_id'], $shop, ModelManager::PROVIDER_SKELETON);
+                $additionalField = $this->manager->find($shop, 'userAdditionalField', $additionalData['field_id'], true, ModelManager::PROVIDER_WEBHOOK);
                 $additionalField->setUser($user);
                 $this->fillModel($additionalData, $additionalField);
                 $user->addAdditionalField($additionalField);

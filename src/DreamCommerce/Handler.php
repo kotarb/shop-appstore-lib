@@ -107,34 +107,6 @@ class Handler implements HandlerInterface
     /**
      * {@inheritdoc}
      */
-    public function verifyPayload($payload)
-    {
-        $providedHash = $payload['hash'];
-        unset($payload['hash']);
-
-        // sort params
-        ksort($payload);
-
-        $processedPayload = "";
-
-        foreach($payload as $k => $v){
-            $processedPayload .= '&'.$k.'='.$v;
-        }
-
-        $processedPayload = substr($processedPayload, 1);
-
-        $computedHash = hash_hmac('sha512', $processedPayload, $this->appStoreSecret);
-
-        if($computedHash != $providedHash) {
-            throw new HandlerException('Hash verification failed', HandlerException::HASH_FAILED);
-        }
-
-        return true;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function actionExists($action)
     {
         if(!in_array($action, $this->eventsMap)){

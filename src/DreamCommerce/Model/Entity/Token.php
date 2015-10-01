@@ -5,6 +5,11 @@ namespace DreamCommerce\Model\Entity;
 class Token extends ShopDependent implements TokenInterface
 {
     /**
+     * @var ApplicationInterface
+     */
+    protected $application;
+
+    /**
      * @var int $tokenId
      */
     protected $tokenId;
@@ -116,6 +121,24 @@ class Token extends ShopDependent implements TokenInterface
     public function setRefreshToken($refreshToken)
     {
         $this->refreshToken = $refreshToken;
+        return $this;
+    }
+
+    /**
+     * @return ApplicationInterface
+     */
+    public function getApplication()
+    {
+        return $this->application;
+    }
+
+    /**
+     * @param ApplicationInterface $application
+     * @return $this
+     */
+    public function setApplication(ApplicationInterface $application)
+    {
+        $this->application = $application;
         return $this;
     }
 }

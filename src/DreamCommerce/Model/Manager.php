@@ -9,37 +9,42 @@ use DreamCommerce\Model\Provider\ProviderInterface;
 use DreamCommerce\Model\Provider\Skeleton as SkeletonProvider;
 use DreamCommerce\Model\Provider\Rest as RestProvider;
 use DreamCommerce\Model\Provider\Doctrine as DoctrineProvider;
+use DreamCommerce\Model\Provider\Webhook as WebhookProvider;
 
 class Manager
 {
     const PROVIDER_SKELETON = 'skeleton';
+    const PROVIDER_WEBHOOK = 'webhook';
     const PROVIDER_REST = 'rest';
-    const PROVIDER_DOCTRINE = 'doctine';
-
-    /**
-     * @var ShopInterface
-     */
-    private static $shop;
-
-    /**
-     * @var array
-     */
-    private static $models = array();
+    const PROVIDER_DOCTRINE = 'doctrine';
 
     /**
      * @var \SplPriorityQueue
      */
-    private static $providers;
+    private $providers;
 
     /**
      * @var int
      */
-    private static $serial = PHP_INT_MAX;
+    private $serial = PHP_INT_MAX;
 
     /**
-     * Disable constructor
+     * @param ShopInterface|null $shop
+     * @param string $objectName
+     * @param int $objectId
+     * @param boolean $fromInstanceCache
+     * @return ShopDependentInterface|boolean
      */
-    private function __construct()
+    public function find(ShopInterface $shop, $objectName, $objectId, $fromInstanceCache = true)
+    {
+
+    }
+
+    /**
+     * @param ShopDependentInterface $object
+     * @return boolean
+     */
+    public function persist(ShopDependentInterface $object)
     {
 
     }
@@ -53,7 +58,7 @@ class Manager
      * @return ShopDependentInterface
      * @throws ModelException
      */
-    public static function getModel($objectName, $objectId = null, ShopInterface $shop = null, $fromCache = true, $forceProvider = null)
+    public function get($objectName, $objectId = null, ShopInterface $shop = null, $fromCache = true, $forceProvider = null)
     {
         if($forceProvider !== null && (!is_string($forceProvider) && !($forceProvider instanceof ProviderInterface))) {
             throw new ModelException();
@@ -67,16 +72,16 @@ class Manager
         $shopUniqId = $shop->getShopUniqId();
 
         if($fromCache && $objectId !== null) {
-            if (!isset(self::$models[$shopUniqId])) {
-                self::$models[$shopUniqId] = array();
+            if (!isset($this->models[$shopUniqId])) {
+                $this->models[$shopUniqId] = array();
             }
 
-            if (!isset(self::$models[$shopUniqId][$objectName])) {
-                self::$models[$shopUniqId][$objectName] = array();
+            if (!isset($this->models[$shopUniqId][$objectName])) {
+                $this->models[$shopUniqId][$objectName] = array();
             }
 
-            if (isset(self::$models[$shopUniqId][$objectName][$objectId])) {
-                return self::$models[$shopUniqId][$objectName][$objectId];
+            if (isset($this->models[$shopUniqId][$objectName][$objectId])) {
+                return $this->models[$shopUniqId][$objectName][$objectId];
             }
         }
 
@@ -114,7 +119,7 @@ class Manager
                 }
             } else {
                 /** @var ProviderInterface $provider */
-                $object = $provider->getModel($objectName, $objectId, $shop);
+                $object = $provider->find($shop, $objectName, $objectId);
                 if($object !== false) {
                     $object->setProvider($provider);
                     return $object;
@@ -130,68 +135,11 @@ class Manager
     }
 
     /**
-     * @param ShopInterface|null $shop
-     * @param string|null $objectName
-     * @param int|null $objectId
-     * @return bool
-     */
-    public static function cleanModels(ShopInterface $shop = null, $objectName = null, $objectId = null)
-    {
-        $objectName = ucfirst($objectName);
-
-        if($shop === null) {
-            self::$models = array();
-            return true;
-        }
-
-        $shopUniqId = $shop->getShopUniqId();
-        if($objectName === null) {
-            if(isset(self::$models[$shopUniqId])) {
-                self::$models[$shopUniqId] = array();
-                return true;
-            }
-        } elseif($objectId === null) {
-            if(isset(self::$models[$shopUniqId]) && isset(self::$models[$shopUniqId][$objectName])) {
-                self::$models[$shopUniqId][$objectName] = array();
-                return true;
-            }
-        } else {
-            if(isset(self::$models[$shopUniqId]) && isset(self::$models[$shopUniqId][$objectName]) && isset(self::$models[$shopUniqId][$objectName][$objectId])) {
-                unset(self::$models[$shopUniqId][$objectName][$objectId]);
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    /**
-     * @throws ModelException
-     * @return ShopInterface
-     */
-    public static function getDefaultShop()
-    {
-        if(self::$shop === null) {
-            throw new ModelException('Default shop is not specified', ModelException::SHOP_NOT_SPECIFIED);
-        }
-
-        return self::$shop;
-    }
-
-    /**
-     * @param ShopInterface $shop
-     */
-    public static function setDefaultShop(ShopInterface $shop)
-    {
-        self::$shop = $shop;
-    }
-
-    /**
      * @param string|ProviderInterface $provider
      * @param array|int $priority
      * @throws ModelException
      */
-    public static function registerProvider($provider, $priority = 10)
+    public function registerProvider($provider, $priority = 10)
     {
         if(is_string($provider)) {
             switch($provider) {
@@ -204,6 +152,9 @@ class Manager
                 case self::PROVIDER_DOCTRINE:
                     $provider = new DoctrineProvider();
                     break;
+                case self::PROVIDER_WEBHOOK:
+                    $provider = new WebhookProvider();
+                    break;
             }
         }
 
@@ -212,21 +163,21 @@ class Manager
         }
 
         if (!is_array($priority)) {
-            $priority = array($priority, self::$serial--);
+            $priority = array($priority, $this->serial--);
         }
 
-        self::$providers->insert($provider, $priority);
+        $this->providers->insert($provider, $priority);
     }
 
     /**
      * @return \SplPriorityQueue
      */
-    public static function getProviders()
+    public function getProviders()
     {
-        if(self::$providers === null) {
-            self::$providers = new \SplPriorityQueue();
+        if($this->providers === null) {
+            $this->providers = new \SplPriorityQueue();
         }
 
-        return self::$providers;
+        return $this->providers;
     }
 }

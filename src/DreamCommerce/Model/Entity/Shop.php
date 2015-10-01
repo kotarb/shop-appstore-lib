@@ -44,10 +44,16 @@ class Shop implements ShopInterface
      */
     protected $subscriptions;
 
+    /**
+     * @var \ArrayAccess $applications
+     */
+    protected $applications;
+
     public function __construct()
     {
         $this->billings = new \ArrayObject();
         $this->subscriptions = new \ArrayObject();
+        $this->applications = new \ArrayObject();
     }
 
     /**
@@ -120,6 +126,14 @@ class Shop implements ShopInterface
     {
         $this->url = $url;
         return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getEntryPoint()
+    {
+        return rtrim($this->url, '/') . '/webapi/rest';
     }
 
     /**
@@ -224,6 +238,34 @@ class Shop implements ShopInterface
     public function setSubscriptions($subscriptions)
     {
         $this->subscriptions = $subscriptions;
+        return $this;
+    }
+
+    /**
+     * @return \ArrayAccess
+     */
+    public function getApplications()
+    {
+        return $this->applications;
+    }
+
+    /**
+     * @param ApplicationInterface $application
+     * @return $this
+     */
+    public function addApplication(ApplicationInterface $application)
+    {
+        $this->applications[] = $application;
+        return $this;
+    }
+
+    /**
+     * @param \ArrayAccess $applications
+     * @return $this
+     */
+    public function setApplications($applications)
+    {
+        $this->applications = $applications;
         return $this;
     }
 }

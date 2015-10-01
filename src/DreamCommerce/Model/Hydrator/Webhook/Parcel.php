@@ -4,7 +4,7 @@ namespace DreamCommerce\Model\Hydrator\Webhook;
 
 use DreamCommerce\Exception;
 use DreamCommerce\Model\Manager as ModelManager;
-use DreamCommerce\Model\Hydrator\Base as BaseHydrator;
+use DreamCommerce\Model\Hydrator\Webhook as WebhookHydrator;
 use DreamCommerce\Model\Entity\Shop\OrderInterface;
 use DreamCommerce\Model\Entity\Shop\ParcelAddressInterface;
 use DreamCommerce\Model\Entity\Shop\ParcelInterface;
@@ -14,7 +14,7 @@ use DreamCommerce\Model\Entity\Shop\ProductStockInterface;
 use DreamCommerce\Model\Entity\Shop\ShippingInterface;
 use DreamCommerce\Model\Entity\Shop\TaxInterface;
 
-class Parcel extends BaseHydrator
+class Parcel extends WebhookHydrator
 {
     /**
      * Hydrate $object with the provided $data.
@@ -29,7 +29,7 @@ class Parcel extends BaseHydrator
 
         if(isset($data['order_id'])) {
             /** @var OrderInterface $order */
-            $order = ModelManager::getModel('order', $data['order_id'], $shop);
+            $order = $this->manager->find($shop, 'order', $data['order_id']);
             $parcel->setOrder($order);
         }
 
@@ -39,7 +39,7 @@ class Parcel extends BaseHydrator
             }
 
             /** @var ParcelAddressInterface $billingAddress */
-            $billingAddress = ModelManager::getModel('parcelBillingAddress', $data['billingAddress']['address_id'], $shop, ModelManager::PROVIDER_SKELETON);
+            $billingAddress = $this->manager->find($shop, 'parcelBillingAddress', $data['billingAddress']['address_id'], true, ModelManager::PROVIDER_WEBHOOK);
             $billingAddress->setParcel($parcel);
             $this->fillModel($data['billingAddress'], $billingAddress);
             $parcel->setBillingAddress($billingAddress);
@@ -52,7 +52,7 @@ class Parcel extends BaseHydrator
             }
 
             /** @var ParcelAddressInterface $deliveryAddress */
-            $deliveryAddress = ModelManager::getModel('parcelDeliveryAddress', $data['deliveryAddress']['address_id'], $shop, ModelManager::PROVIDER_SKELETON);
+            $deliveryAddress = $this->manager->find($shop, 'parcelDeliveryAddress', $data['deliveryAddress']['address_id'], true, ModelManager::PROVIDER_WEBHOOK);
             $deliveryAddress->setParcel($parcel);
             $this->fillModel($data['deliveryAddress'], $deliveryAddress);
             $parcel->setDeliveryAddress($deliveryAddress);
@@ -61,11 +61,11 @@ class Parcel extends BaseHydrator
 
         if(isset($data['shipping'])) {
             /** @var ShippingInterface $shipping */
-            $shipping = ModelManager::getModel('shipping', $data['shipping']['shipping_id'], $shop, ModelManager::PROVIDER_SKELETON);
+            $shipping = $this->manager->find($shop, 'shipping', $data['shipping']['shipping_id'], true, ModelManager::PROVIDER_WEBHOOK);
             $this->fillModel($data['shipping'], $shipping);
             if(isset($data['shipping']['tax_id'])) {
                 /** @var TaxInterface $tax */
-                $tax = ModelManager::getModel('tax', $data['shipping']['tax_id'], $shop);
+                $tax = $this->manager->find($shop, 'tax', $data['shipping']['tax_id']);
                 $shipping->setTax($tax);
             }
 
@@ -76,18 +76,18 @@ class Parcel extends BaseHydrator
         if(isset($data['products'])) {
             foreach($data['products'] as $productData) {
                 /** @var ParcelProductInterface $parcelProduct */
-                $parcelProduct = ModelManager::getModel('parcelProduct', $productData['id'], $shop, ModelManager::PROVIDER_SKELETON);
+                $parcelProduct = $this->manager->find($shop, 'parcelProduct', $productData['id'], true, ModelManager::PROVIDER_WEBHOOK);
                 $this->fillModel($productData, $parcelProduct);
 
                 if(isset($productData['product_id'])) {
                     /** @var ProductInterface $product */
-                    $product = ModelManager::getModel('product', $productData['product_id'], $shop);
+                    $product = $this->manager->find($shop, 'product', $productData['product_id']);
                     $parcelProduct->setProduct($product);
                 }
 
                 if(isset($productData['stock_id'])) {
                     /** @var ProductStockInterface $productStock */
-                    $productStock = ModelManager::getModel('productStock', $productData['stock_id'], $shop);
+                    $productStock = $this->manager->find($shop, 'productStock', $productData['stock_id']);
                     $parcelProduct->setProductStock($productStock);
                 }
 

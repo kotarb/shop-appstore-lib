@@ -29,6 +29,11 @@ interface ShopInterface
     /**
      * @return string
      */
+    public function getEntryPoint();
+
+    /**
+     * @return string
+     */
     public function getVersion();
 
     /**
@@ -80,4 +85,21 @@ interface ShopInterface
      * @return $this
      */
     public function setSubscriptions($subscriptions);
+
+    /**
+     * @return \ArrayAccess
+     */
+    public function getApplications();
+
+    /**
+     * @param ApplicationInterface $application
+     * @return $this
+     */
+    public function addApplication(ApplicationInterface $application);
+
+    /**
+     * @param \ArrayAccess $applications
+     * @return $this
+     */
+    public function setApplications($applications);
 }

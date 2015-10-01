@@ -3,7 +3,7 @@
 namespace DreamCommerce\Model\Hydrator\Webhook;
 
 use DreamCommerce\Exception;
-use DreamCommerce\Model\Hydrator\Base as BaseHydrator;
+use DreamCommerce\Model\Hydrator\Webhook as WebhookHydrator;
 use DreamCommerce\Model\Manager as ModelManager;
 use DreamCommerce\Model\Entity\Shop\AuctionInterface;
 use DreamCommerce\Model\Entity\Shop\AuctionOrderInterface;
@@ -24,7 +24,7 @@ use DreamCommerce\Model\Entity\Shop\StatusInterface;
 use DreamCommerce\Model\Entity\Shop\TaxInterface;
 use DreamCommerce\Model\Entity\Shop\UserInterface;
 
-class Order extends BaseHydrator
+class Order extends WebhookHydrator
 {
     /**
      * Hydrate $object with the provided $data.
@@ -39,25 +39,25 @@ class Order extends BaseHydrator
         
         if(isset($data['user_id']) && is_null($data['user_id'])) {
             /** @var UserInterface $user */
-            $user = ModelManager::getModel('user', $data['user_id'], $shop);
+            $user = $this->manager->find($shop, 'user', $data['user_id']);
             $order->setUser($user);
         }
 
         if(isset($data['currency_id'])) {
             /** @var CurrencyInterface $currency */
-            $currency = ModelManager::getModel('currency', $data['currency_id'], $shop);
+            $currency = $this->manager->find($shop, 'currency', $data['currency_id']);
             $order->setCurrency($currency);
         }
 
         if(isset($data['lang_id'])) {
             /** @var LanguageInterface $language */
-            $language = ModelManager::getModel('language', $data['lang_id'], $shop);
+            $language = $this->manager->find($shop, 'language', $data['lang_id']);
             $order->setLanguage($language);
         }
 
         if(isset($data['code_id'])) {
             /** @var PromoCodeInterface $promoCode */
-            $promoCode = ModelManager::getModel('promoCode', $data['code_id'], $shop);
+            $promoCode = $this->manager->find($shop, 'promoCode', $data['code_id']);
             $order->setPromoCode($promoCode);
         }
 
@@ -66,7 +66,7 @@ class Order extends BaseHydrator
                 $data['billingAddress']['tax_identification_number'] = $data['billingAddress']['tax_id'];
             }
             /** @var OrderAddressInterface $billingAddress */
-            $billingAddress = ModelManager::getModel('orderBillingAddress', $data['billingAddress']['address_id'], $shop, ModelManager::PROVIDER_SKELETON);
+            $billingAddress = $this->manager->find($shop, 'orderBillingAddress', $data['billingAddress']['address_id'], true, ModelManager::PROVIDER_WEBHOOK);
             $billingAddress->setOrder($order);
             $this->fillModel($data['billingAddress'], $billingAddress);
             $order->setBillingAddress($billingAddress);
@@ -78,7 +78,7 @@ class Order extends BaseHydrator
                 $data['deliveryAddress']['tax_identification_number'] = $data['deliveryAddress']['tax_id'];
             }
             /** @var OrderAddressInterface $deliveryAddress */
-            $deliveryAddress = ModelManager::getModel('orderDeliveryAddress', $data['deliveryAddress']['address_id'], $shop, ModelManager::PROVIDER_SKELETON);
+            $deliveryAddress = $this->manager->find($shop, 'orderDeliveryAddress', $data['deliveryAddress']['address_id'], true, ModelManager::PROVIDER_WEBHOOK);
             $deliveryAddress->setOrder($order);
             $this->fillModel($data['deliveryAddress'], $deliveryAddress);
             $order->setDeliveryAddress($deliveryAddress);
@@ -87,25 +87,25 @@ class Order extends BaseHydrator
 
         if(isset($data['auction'])) {
             /** @var AuctionOrderInterface $auctionOrder */
-            $auctionOrder = ModelManager::getModel('auctionOrder', $data['auction']['auction_order_id'], $shop, ModelManager::PROVIDER_SKELETON);
+            $auctionOrder = $this->manager->find($shop, 'auctionOrder', $data['auction']['auction_order_id'], true, ModelManager::PROVIDER_WEBHOOK);
             $auctionOrder->setOrder($order);
             $this->fillModel($data['auction'], $auctionOrder);
             $order->setAuctionOrder($auctionOrder);
 
             /** @var AuctionInterface $auction */
-            $auction = ModelManager::getModel('auction', $data['auction']['auction_id'], $shop);
+            $auction = $this->manager->find($shop, 'auction', $data['auction']['auction_id']);
             $auctionOrder->setAuction($auction);
             unset($data['auction']);
         }
 
         if(isset($data['shipping'])) {
             /** @var ShippingInterface $shipping */
-            $shipping = ModelManager::getModel('shipping', $data['shipping_id'], $shop, ModelManager::PROVIDER_SKELETON);
+            $shipping = $this->manager->find($shop, 'shipping', $data['shipping_id'], true, ModelManager::PROVIDER_WEBHOOK);
             $this->fillModel($data['shipping'], $shipping);
 
             if(isset($data['shipping']['tax_id'])) {
                 /** @var TaxInterface $tax */
-                $tax = ModelManager::getModel('tax', $data['shipping']['tax_id'], $shop);
+                $tax = $this->manager->find($shop, 'tax', $data['shipping']['tax_id']);
                 $shipping->setTax($tax);
             }
             $order->setShipping($shipping);
@@ -114,12 +114,12 @@ class Order extends BaseHydrator
 
         if(isset($data['status'])) {
             /** @var StatusInterface $status */
-            $status = ModelManager::getModel('status', $data['status_id'], $shop, ModelManager::PROVIDER_SKELETON);
+            $status = $this->manager->find($shop, 'status', $data['status_id'], true, ModelManager::PROVIDER_WEBHOOK);
             $this->fillModel($data['status'], $status);
             $order->setStatus($status);
 
             /** @var StatusTranslationInterface $statusTranslation */
-            $statusTranslation = ModelManager::getModel('statusTranslation', null, $shop, ModelManager::PROVIDER_SKELETON);
+            $statusTranslation = $this->manager->find($shop, 'statusTranslation', null, false, ModelManager::PROVIDER_WEBHOOK);
             $this->fillModel(array(
                 'status_id' => $data['status']['status_id'],
                 'lang_id' => $data['lang_id'],
@@ -134,12 +134,12 @@ class Order extends BaseHydrator
 
         if(isset($data['payment'])) {
             /** @var PaymentInterface $payment */
-            $payment = ModelManager::getModel('payment', $data['payment_id'], $shop, ModelManager::PROVIDER_SKELETON);
+            $payment = $this->manager->find($shop, 'payment', $data['payment_id'], true, ModelManager::PROVIDER_WEBHOOK);
             $this->fillModel($data['payment'], $payment);
             $order->setPayment($payment);
 
             /** @var PaymentTranslationInterface $paymentTranslation */
-            $paymentTranslation = ModelManager::getModel('paymentTranslation', null, $shop, ModelManager::PROVIDER_SKELETON);
+            $paymentTranslation = $this->manager->find($shop, 'paymentTranslation', null, false, ModelManager::PROVIDER_WEBHOOK);
             $this->fillModel(array(
                 'lang_id' => $data['lang_id'],
                 'payment_id' => $data['payment']['payment_id'],
@@ -148,7 +148,7 @@ class Order extends BaseHydrator
             ), $paymentTranslation);
 
             /** @var LanguageInterface $language */
-            $language = ModelManager::getModel('language', $data['lang_id'], $shop);
+            $language = $this->manager->find($shop, 'language', $data['lang_id']);
             $paymentTranslation->setLanguage($language);
             $paymentTranslation->setPayment($payment);
             $payment->addTranslation($paymentTranslation);
@@ -159,15 +159,15 @@ class Order extends BaseHydrator
         if(isset($data['products'])) {
             foreach($data['products'] as $productData) {
                 /** @var OrderProductInterface $orderProduct */
-                $orderProduct = ModelManager::getModel('orderProduct', $productData['id'], $shop, ModelManager::PROVIDER_SKELETON);
+                $orderProduct = $this->manager->find($shop, 'orderProduct', $productData['id'], false, ModelManager::PROVIDER_WEBHOOK);
                 $orderProduct->setOrder($order);
 
                 /** @var ProductInterface $product */
-                $product = ModelManager::getModel('product', $productData['product_id'], $shop);
+                $product = $this->manager->find($shop, 'product', $productData['product_id']);
                 $orderProduct->setProduct($product);
 
                 /** @var ProductStockInterface $productStock */
-                $productStock = ModelManager::getModel('productStock', $productData['stock_id'], $shop);
+                $productStock = $this->manager->find($shop, 'productStock', $productData['stock_id']);
                 $orderProduct->setProductStock($productStock);
 
                 $this->fillModel($productData, $orderProduct);
@@ -179,7 +179,7 @@ class Order extends BaseHydrator
         if(isset($data['additional_fields'])) {
             foreach($data['additional_fields'] as $additionalData) {
                 /** @var OrderAdditionalFieldInterface $additionalField */
-                $additionalField = ModelManager::getModel('orderAdditionalField', $additionalData['field_id'], $shop, ModelManager::PROVIDER_SKELETON);
+                $additionalField = $this->manager->find($shop, 'orderAdditionalField', $additionalData['field_id'], true, ModelManager::PROVIDER_WEBHOOK);
                 $additionalField->setOrder($order);
 
                 $this->fillModel($additionalData, $additionalField);
