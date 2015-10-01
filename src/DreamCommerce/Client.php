@@ -2,16 +2,14 @@
 
 namespace DreamCommerce;
 
-use DreamCommerce\Model\Entity\ApplicationInterface;
-use DreamCommerce\Model\Entity\ShopInterface;
 use DreamCommerce\Exception\ClientException;
-use DreamCommerce\Exception\HttpException;
 use Psr\Log\LoggerInterface;
 
 /**
  * DreamCommerce requesting library
  *
  * @package DreamCommerce
+ *
  * @property-read Resource\Aboutpage $aboutPage
  * @property-read Resource\ApplicationLock $applicationLock
  * @property-read Resource\ApplicationVersion $applicationVersion
@@ -60,152 +58,243 @@ use Psr\Log\LoggerInterface;
  */
 class Client implements ClientInterface
 {
-    /**
-     * @var ApplicationInterface
-     */
-    protected $application;
+    const ADAPTER_OAUTH = 'OAuth';
+    const ADAPTER_BASIC_AUTH = 'BasicAuth';
 
     /**
-     * @var ShopInterface
+     * @var \DreamCommerce\Client\OAuth
      */
-    protected $shop;
+    protected $adapter = null;
 
     /**
-     * HTTP Client handle
-     * @var Http|null
+     * @var \DreamCommerce\ClientInterface
      */
-    protected $httpClient = null;
+    protected static $defaultAdapter = null;
 
     /**
-     * @var LoggerInterface
+     * @param string $adapter
+     * @param array $options
+     * @return \DreamCommerce\ClientInterface
+     * @throws ClientException
      */
-    protected $logger;
-
-    /**
-     * @var \Callable
-     */
-    protected $onTokenInvalidHandler;
-
-    /**
-     * @var string
-     */
-    protected $locale = 'en_US';
-
-    /**
-     * @param ApplicationInterface $application
-     * @param ShopInterface $shop
-     */
-    public function __construct(ApplicationInterface $application, ShopInterface $shop)
+    public static function factory($adapter, $options = array())
     {
-        $this->application = $application;
-        $this->shop = $shop;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getToken($authCode)
-    {
-        $res = $this->getHttpClient()->post(
-            $this->shop->getEntryPoint() . '/oauth/token',
-            array(
-                'code' => $authCode
-            ), array(
-                'grant_type' => 'authorization_code'
-            ), array(
-                'Authorization' => 'Basic ' . base64_encode($this->application->getClientId() . ':' . $this->application->getClientSecret())
-            )
-        );
-
-        if(!$res || isset($res['data']['error'])){
-            throw new ClientException($res['data']['error'], ClientException::API_ERROR);
+        if (!is_string($adapter) || empty($adapter)) {
+            throw new ClientException('Adapter name must be specified in a string');
         }
 
-        // automatically set token to the freshly requested
-        $this->shop->setAccessToken($res['data']['access_token']);
-
-        return $res['data'];
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function refreshToken($refreshToken)
-    {
-        $res = $this->getHttpClient()->post(
-            $this->shop->getEntryPoint() . '/oauth/token',
-            array(
-                'client_id' => $this->application->getClientId(),
-                'client_secret' => $this->application->getClientSecret(),
-                'refresh_token' => $refreshToken
-            ), array(
-                'grant_type'=>'refresh_token'
-            )
-        );
-
-        if(!$res || !empty($res['data']['error'])){
-            throw new ClientException($res['error'], ClientException::API_ERROR);
+        if (!is_array($options)) {
+            throw new ClientException('Adapter parameters must be in an array');
         }
 
-        $this->shop->setAccessToken($res['data']['access_token']);
+        $adapterNamespace = '\\DreamCommerce\\Client';
+        if (isset($config['adapterNamespace'])) {
+            if ($config['adapterNamespace'] != '') {
+                $adapterNamespace = $config['adapterNamespace'];
+            }
+            unset($config['adapterNamespace']);
+        }
 
-        return $res['data'];
+        $adapterName = $adapterNamespace . '\\';
+        $adapterName .= str_replace(' ', '\\', ucwords(str_replace('\\', ' ', $adapter)));
+
+        if (!class_exists($adapterName)) {
+            throw new ClientException('Cannot load class "' . $adapterName . '"');
+        }
+
+        $clientAdapter = new $adapterName($options);
+
+        if(! $clientAdapter instanceof ClientInterface) {
+            throw new ClientException('Adapter class "' . $adapterName . '" does not extend \\DreamCommerce\\ClientInterface');
+        }
+
+        if(self::$defaultAdapter === null) {
+            self::$defaultAdapter = $clientAdapter;
+        }
+
+        return $clientAdapter;
+    }
+
+    /**
+     * @return null|ClientInterface
+     */
+    public static function getDefaultAdapter()
+    {
+        return self::$defaultAdapter;
+    }
+
+    /**
+     * @param ClientInterface $adapter
+     */
+    public static function setDefaultAdapter(ClientInterface $adapter)
+    {
+        self::$defaultAdapter = $adapter;
+    }
+
+    /*
+     * ----------------------------------------------------------------------------
+     * BACKWARD COMPATIBILITY
+     * ----------------------------------------------------------------------------
+     */
+
+    /**
+     * @param string $entrypoint shop url
+     * @param string $clientId
+     * @param string $clientSecret
+     * @throws \DreamCommerce\Exception\ClientException
+     * @deprecated
+     */
+    public function __construct($entrypoint, $clientId, $clientSecret)
+    {
+        $adapter = self::factory(self::ADAPTER_OAUTH, array(
+            'entrypoint' => $entrypoint,
+            'client_id' => $clientId,
+            'client_secret' => $clientSecret
+        ));
+
+        $this->adapter = $adapter;
     }
 
     /**
      * {@inheritdoc}
+     * @deprecated
      */
     public function request(Resource $res, $method, $objectPath = null, $data = array(), $query = array())
     {
-        $client = $this->getHttpClient();
-        if(!method_exists($client, $method)) {
-            throw new ClientException('Method not supported', ClientException::METHOD_NOT_SUPPORTED);
+        return $this->adapter->request($res, $method, $objectPath, $data, $query);
+    }
+
+    /**
+     * {@inheritdoc}
+     * @deprecated
+     */
+    public function setHttpClient(HttpInterface $httpClient)
+    {
+        return $this->adapter->setHttpClient($httpClient);
+    }
+
+    /**
+     * {@inheritdoc}
+     * @deprecated
+     */
+    public function getHttpClient()
+    {
+        return $this->adapter->getHttpClient();
+    }
+
+    /**
+     * {@inheritdoc}
+     * @deprecated
+     */
+    public function getLocale()
+    {
+        return $this->adapter->getLocale();
+    }
+
+    /**
+     * {@inheritdoc}
+     * @deprecated
+     */
+    public function setLocale($locale)
+    {
+        return $this->adapter->setLocale($locale);
+    }
+
+    /**
+     * {@inheritdoc}
+     * @deprecated
+     */
+    public function setLogger(LoggerInterface $logger)
+    {
+        return $this->adapter->setLogger($logger);
+    }
+
+    /**
+     * {@inheritdoc}
+     * @deprecated
+     */
+    public function getLogger()
+    {
+        return $this->adapter->getLogger();
+    }
+
+    /**
+     * Get OAuth tokens
+     *
+     * @param string $authCode
+     * @return \stdClass
+     * @throws Exception\ClientException
+     */
+    public function getToken($authCode = null)
+    {
+        if($authCode !== null) {
+            $this->adapter->setAuthCode($authCode);
         }
+        return $this->adapter->authenticate();
+    }
 
-        $url = $this->shop->getEntryPoint() . '/' . $res->getName();
-        if($objectPath){
-            if(is_array($objectPath)){
-                $objectPath = join('/', $objectPath);
-            }
-            $url .= '/'.$objectPath;
+    /**
+     * Refresh OAuth tokens
+     *
+     * @param string $refreshToken
+     * @return array
+     * @throws Exception\ClientException
+     */
+    public function refreshToken($refreshToken = null)
+    {
+        if($refreshToken !== null) {
+            $this->adapter->setRefreshToken($refreshToken);
         }
+        return $this->adapter->refreshTokens();
+    }
 
-        // setup OAuth token and we request JSON
-        $headers = array(
-            'Authorization'=>'Bearer '.$this->shop->getaccessToken,
-            'Content-Type'=>'application/json',
-            'Accept-Language' => $this->locale . ';q=0.8'
-        );
+    /**
+     * Sets an access token for further requests
+     * @param $token
+     */
+    public function setAccessToken($token)
+    {
+        $this->adapter->setAccessToken($token);
+    }
 
-        try {
-            // dispatch correct method
-            if(in_array($method, array('get', 'delete'))){
-                return call_user_func(array(
-                    $client, $method
-                ), $url, $query, $headers);
-            } else {
-                return call_user_func(array(
-                    $client, $method
-                ), $url, $data, $query, $headers);
-            }
+    /**
+     * fired if token is invalid
+     * @param Callable|null $callback
+     * @deprecated
+     */
+    public function setOnTokenInvalidHandler($callback = null)
+    {
+        $this->adapter->setOnTokenInvalidHandler($callback);
+    }
 
-        } catch(HttpException $ex) {
+    /**
+     * {@inheritdoc}
+     * @deprecated
+     */
+    public function authenticate($force = false)
+    {
+        return $this->adapter->authenticate($force);
+    }
 
-            // fire a handler for token reneval
-            $previous = $ex->getPrevious();
-            if($previous instanceof HttpException){
-                $response = $previous->getResponse();
-                $handler = $this->onTokenInvalidHandler;
-                if($response['error']=='unauthorized_client' && $handler){
-                    $exceptionHandled = $handler($this, $ex);
-                    if($exceptionHandled){
-                        return;
-                    }
-                }
-            }
 
-            throw new ClientException('HTTP error: '.$ex->getMessage(), ClientException::API_ERROR, $ex);
-        }
+    /**
+     * @return Client\OAuth
+     * @deprecated
+     */
+    public function getAdapter()
+    {
+        return $this->adapter;
+    }
+
+    /**
+     * @param ClientInterface $adapter
+     * @return $this
+     * @deprecated
+     */
+    public function setAdapter(ClientInterface $adapter)
+    {
+        $this->adapter = $adapter;
+        return $this;
     }
 
     /**
@@ -214,78 +303,10 @@ class Client implements ClientInterface
      *
      * @return Resource
      * @param $resource
+     * @deprecated
      */
-    public function __get($resource){
-        return Resource::factory($this, $resource);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setHttpClient(HttpInterface $httpClient)
+    public function __get($resource)
     {
-        $this->httpClient = $httpClient;
-
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getHttpClient()
-    {
-        if($this->httpClient === null) {
-            $this->httpClient = Http::instance();
-        }
-
-        return $this->httpClient;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setLogger(LoggerInterface $logger)
-    {
-        $this->logger = $logger;
-
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getLogger()
-    {
-        if($this->logger === null) {
-            $this->logger = new Logger();
-        }
-
-        return $this->logger;
-    }
-
-    /**
-     * fired if token is invalid
-     * @param Callable|null $callback
-     */
-    public function setOnTokenInvalidHandler($callback = null){
-        $this->onTokenInvalidHandler = $callback;
-    }
-
-    /**
-     * @return string
-     */
-    public function getLocale()
-    {
-        return $this->locale;
-    }
-
-    /**
-     * @param string $locale
-     * @return $this
-     */
-    public function setLocale($locale)
-    {
-        $this->locale = $locale;
-        return $this;
+        return Resource::factory($this->adapter, $resource);
     }
 }
