@@ -20,7 +20,7 @@ class Skeleton implements ProviderInterface
      * {@inheritdoc}
      * @throws ModelException
      */
-    public function find(ShopInterface $shop, $objectName, $objectId, $fromInstanceCache = false)
+    public function find(ShopInterface $shop, $objectName, $objectId = null, $fromInstanceCache = true)
     {
         $this->preFind($shop, $objectName, $objectId);
 
@@ -95,7 +95,7 @@ class Skeleton implements ProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function preFind(ShopInterface $shop, $objectName, $objectId = null)
+    public function preFind(ShopInterface $shop, $objectName, $objectId = null, $fromInstanceCache = true)
     {
         // do nothing ...
     }
@@ -103,7 +103,7 @@ class Skeleton implements ProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function postFind(ShopInterface $shop, $objectName, $objectId = null, ShopDependentInterface $object)
+    public function postFind(ShopInterface $shop, $objectName, $objectId = null, $fromInstanceCache = true, ShopDependentInterface $object)
     {
         // do nothing ...
     }

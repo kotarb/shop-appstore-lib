@@ -131,14 +131,6 @@ class Shop implements ShopInterface
     /**
      * @return string
      */
-    public function getEntryPoint()
-    {
-        return rtrim($this->url, '/') . '/webapi/rest';
-    }
-
-    /**
-     * @return string
-     */
     public function getVersion()
     {
         return $this->version;

@@ -3,7 +3,7 @@
 namespace DreamCommerce\Validator;
 
 use DreamCommerce\Exception\WebhookException;
-use DreamCommerce\Model\Entity\WebhookRequest;
+use DreamCommerce\Model\WebhookRequest;
 
 class WebhookSignature implements ValidatorInterface
 {

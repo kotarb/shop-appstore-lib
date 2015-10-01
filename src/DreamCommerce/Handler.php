@@ -3,6 +3,7 @@ namespace DreamCommerce;
 
 use DreamCommerce\Exception\ClientException;
 use DreamCommerce\Exception\HandlerException;
+use DreamCommerce\Validator\AppstorePayload;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -60,6 +61,11 @@ class Handler implements HandlerInterface
      * @var LoggerInterface
      */
     protected $logger;
+
+    /**
+     * @var AppstorePayload
+     */
+    protected $validator;
 
     /**
      * @param string $entrypoint
@@ -184,6 +190,18 @@ class Handler implements HandlerInterface
         $this->events[$event][] = $handler;
 
         return count($this->events[$event]);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function verifyPayload($payload)
+    {
+        if(!$this->validator) {
+            $this->validator = new AppstorePayload();
+        }
+
+        return $this->validator->valid($payload);
     }
 
     /**

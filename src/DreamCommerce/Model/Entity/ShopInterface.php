@@ -29,11 +29,6 @@ interface ShopInterface
     /**
      * @return string
      */
-    public function getEntryPoint();
-
-    /**
-     * @return string
-     */
     public function getVersion();
 
     /**

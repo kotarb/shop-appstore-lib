@@ -2,22 +2,19 @@
 
 namespace DreamCommerce\Model\Entity;
 
+use DreamCommerce\ClientInterface;
+
 class Application implements ApplicationInterface
 {
     /**
      * @var string
      */
-    protected $clientId;
+    protected $applicationId;
 
     /**
-     * @var string
+     * @var ClientInterface
      */
-    protected $clientSecret;
-
-    /**
-     * @var string
-     */
-    protected $appStoreSecret;
+    protected $clientHandler;
 
     /**
      * @var \ArrayAccess
@@ -50,54 +47,36 @@ class Application implements ApplicationInterface
     /**
      * @return string
      */
-    public function getClientId()
+    public function getApplicationId()
     {
-        return $this->clientId;
+        return $this->applicationId;
     }
 
     /**
-     * @param string $clientId
+     * @param string $applicationId
      * @return $this
      */
-    public function setClientId($clientId)
+    public function setApplicationId($applicationId)
     {
-        $this->clientId = $clientId;
+        $this->applicationId = $applicationId;
         return $this;
     }
 
     /**
-     * @return string
+     * @return ClientInterface
      */
-    public function getClientSecret()
+    public function getClientHandler()
     {
-        return $this->clientSecret;
+        return $this->clientHandler;
     }
 
     /**
-     * @param string $clientSecret
+     * @param ClientInterface $clientHandler
      * @return $this
      */
-    public function setClientSecret($clientSecret)
+    public function setClientHandler($clientHandler)
     {
-        $this->clientSecret = $clientSecret;
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getAppStoreSecret()
-    {
-        return $this->appStoreSecret;
-    }
-
-    /**
-     * @param string $appStoreSecret
-     * @return $this
-     */
-    public function setAppStoreSecret($appStoreSecret)
-    {
-        $this->appStoreSecret = $appStoreSecret;
+        $this->clientHandler = $clientHandler;
         return $this;
     }
 

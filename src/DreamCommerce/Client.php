@@ -3,6 +3,8 @@
 namespace DreamCommerce;
 
 use DreamCommerce\Exception\ClientException;
+use DreamCommerce\Model\Entity\Application;
+use DreamCommerce\Model\Entity\Shop;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -146,11 +148,18 @@ class Client implements ClientInterface
      */
     public function __construct($entrypoint, $clientId, $clientSecret)
     {
+        $application = new Application();
+
+        $shop = new Shop();
+        $shop->setUrl($entrypoint);
+
         $adapter = self::factory(self::ADAPTER_OAUTH, array(
-            'entrypoint' => $entrypoint,
+            'application' => $application,
+            'shop' => $shop,
             'client_id' => $clientId,
             'client_secret' => $clientSecret
         ));
+        $application->setClientHandler($adapter);
 
         $this->adapter = $adapter;
     }

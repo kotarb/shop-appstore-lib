@@ -1,10 +1,11 @@
 <?php
 
-namespace DreamCommerce\Model\Entity;
+namespace DreamCommerce\Model;
 
 use DreamCommerce\Model\Entity\Shop\WebhookInterface;
+use DreamCommerce\Model\Entity\ShopDependent;
 
-class AppstoreRequest extends ShopDependent
+class WebhookRequest extends ShopDependent
 {
     /**
      * @var string

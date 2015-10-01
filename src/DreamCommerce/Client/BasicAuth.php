@@ -30,7 +30,8 @@ class BasicAuth extends Bearer
      *
      * Example:
      * {
-     *      entrypoint:     'http://shop.com',
+     *      application:    <ApplicationInterface>,
+     *      shop:           <ShopInterface>,
      *      username:       '12345',
      *      password:       '54321'
      * }
@@ -58,11 +59,13 @@ class BasicAuth extends Bearer
      */
     public function authenticate($force = false)
     {
-        if($this->accessToken !== null && !$force) {
+        $token = $this->shop->getToken();
+
+        if($token->getAccessToken() !== null && !$force) {
             return false;
         }
 
-        $res = $this->getHttpClient()->post($this->entrypoint.'/auth', array(), array(
+        $res = $this->getHttpClient()->post(rtrim($this->shop->getUrl(), '/') . '/auth', array(), array(
             'client_id' => $this->username,
             'client_secret' => $this->password
         ));
@@ -72,7 +75,12 @@ class BasicAuth extends Bearer
         }
 
         // automatically set token to the freshly requested
-        $this->setAccessToken($res['data']['access_token']);
+
+        $expirationDate = new \DateTime('+' . $res['data']['expires_in'] . ' seconds');
+
+        $token->setAccessToken($res['data']['access_token'])
+            ->setRefreshToken(null)
+            ->setExpirationDate($expirationDate);
 
         return $res['data'];
     }

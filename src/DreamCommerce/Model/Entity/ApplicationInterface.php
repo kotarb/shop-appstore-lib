@@ -2,62 +2,97 @@
 
 namespace DreamCommerce\Model\Entity;
 
+use DreamCommerce\ClientInterface;
+
 interface ApplicationInterface
 {
     /**
      * @return string
      */
-    public function getClientId();
+    public function getApplicationId();
 
     /**
-     * @param string $clientId
+     * @param string $applicationId
      * @return $this
      */
-    public function setClientId($clientId);
+    public function setApplicationId($applicationId);
 
     /**
-     * @return string
+     * @return ClientInterface
      */
-    public function getClientSecret();
+    public function getClientHandler();
 
     /**
-     * @param string $clientSecret
+     * @param ClientInterface $clientHandler
      * @return $this
      */
-    public function setClientSecret($clientSecret);
+    public function setClientHandler($clientHandler);
 
     /**
-     * @return string
+     * @return \ArrayAccess
      */
-    public function getAppStoreSecret();
-
-    /**
-     * @param string $appStoreSecret
-     * @return $this
-     */
-    public function setAppStoreSecret($appStoreSecret);
-
     public function getBillings();
 
+    /**
+     * @param BillingInterface $billing
+     * @return $this
+     */
     public function addBilling(BillingInterface $billing);
 
+    /**
+     * @param \ArrayAccess $billings
+     * @return $this
+     */
     public function setBillings($billings);
 
+    /**
+     * @return \ArrayAccess
+     */
     public function getShops();
 
+    /**
+     * @param ShopInterface $shop
+     * @return $this
+     */
     public function addShop(ShopInterface $shop);
 
+    /**
+     * @param \ArrayAccess $shops
+     * @return $this
+     */
     public function setShops($shops);
 
+    /**
+     * @return \ArrayAccess
+     */
     public function getSubscriptions();
 
+    /**
+     * @param SubscriptionInterface $subscription
+     * @return $this
+     */
     public function addSubscription(SubscriptionInterface $subscription);
 
+    /**
+     * @param \ArrayAccess $subscriptions
+     * @return $this
+     */
     public function setSubscriptions($subscriptions);
 
+    /**
+     * @return \ArrayAccess
+     */
     public function getTokens();
 
+    /**
+     * @param TokenInterface $token
+     * @return $this
+     */
     public function addToken(TokenInterface $token);
 
+    /**
+     * @param \ArrayAccess $tokens
+     * @return $this
+     */
     public function setTokens($tokens);
 }

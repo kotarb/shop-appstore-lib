@@ -8,6 +8,8 @@ use DreamCommerce\Exception\HttpException;
 use DreamCommerce\Http;
 use DreamCommerce\HttpInterface;
 use DreamCommerce\Logger;
+use DreamCommerce\Model\Entity\ApplicationInterface;
+use DreamCommerce\Model\Entity\ShopInterface;
 use DreamCommerce\Resource;
 use Psr\Log\LoggerInterface;
 
@@ -16,6 +18,7 @@ use Psr\Log\LoggerInterface;
  * @package DreamCommerce\Client
  *
  * @property-read Resource\Aboutpage $aboutPage
+ * @property-read Resource\AdditionalField $additionalField
  * @property-read Resource\ApplicationLock $applicationLock
  * @property-read Resource\ApplicationVersion $applicationVersion
  * @property-read Resource\Attribute $attribute
@@ -64,22 +67,14 @@ use Psr\Log\LoggerInterface;
 abstract class Bearer implements ClientInterface
 {
     /**
-     * API entrypoint
-     * @var null|string
+     * @var ApplicationInterface
      */
-    protected $entrypoint = null;
+    protected $application;
 
     /**
-     * Access token
-     * @var string
+     * @var ShopInterface
      */
-    protected $accessToken = null;
-
-    /**
-     * Expires in
-     * @var integer
-     */
-    protected $expiresIn = 0;
+    protected $shop;
 
     /**
      * @var \Callable
@@ -112,27 +107,21 @@ abstract class Bearer implements ClientInterface
             throw new ClientException('Adapter parameters must be in an array', ClientException::PARAMETER_NOT_SPECIFIED);
         }
 
-        if(!isset($options['entrypoint'])) {
-            throw new ClientException('Parameter "entrypoint" is required', ClientException::PARAMETER_NOT_SPECIFIED);
+        if(!isset($options['application'])) {
+            // TODO
+        } elseif(!($options['application'] instanceof ApplicationInterface)) {
+            // TODO
+        } else {
+            $this->application = $options['application'];
         }
 
-        $entrypoint = $options['entrypoint'];
-
-        if(!filter_var($entrypoint, FILTER_VALIDATE_URL)){
-            throw new ClientException('Invalid entrypoint URL', ClientException::ENTRYPOINT_URL_INVALID);
+        if(!isset($options['shop'])) {
+            // TODO
+        } elseif(!($options['shop'] instanceof ShopInterface)) {
+            // TODO
+        } else {
+            $this->shop = $options['shop'];
         }
-
-        // adjust base URL
-        if($entrypoint[strlen($entrypoint)-1]=='/'){
-            $entrypoint = substr($entrypoint, 0, -1);
-        }
-
-        // adjust webapi query
-        if(strpos($entrypoint, '/webapi/rest')===false){
-            $entrypoint .= '/webapi/rest';
-        }
-
-        $this->entrypoint = $entrypoint;
     }
 
     /**
@@ -147,7 +136,8 @@ abstract class Bearer implements ClientInterface
             throw new ClientException('Method not supported', ClientException::METHOD_NOT_SUPPORTED);
         }
 
-        $url = $this->entrypoint.'/'.$res->getName();
+        $shop = $this->getShop();
+        $url = rtrim($shop->getUrl(), '/') . '/' . $res->getName();
         if($objectPath){
             if(is_array($objectPath)){
                 $objectPath = join('/', $objectPath);
@@ -156,7 +146,7 @@ abstract class Bearer implements ClientInterface
         }
 
         $headers = array(
-            'Authorization' => 'Bearer ' . $this->getAccessToken(),
+            'Authorization' => 'Bearer ' . $shop->getToken()->getAccessToken(),
             'Content-Type' => 'application/json',
             'Accept-Language' => $this->getLocale() . ';q=0.8'
         );
@@ -204,43 +194,38 @@ abstract class Bearer implements ClientInterface
     }
 
     /**
-     * @return string
-     * @throws \DreamCommerce\Exception\ClientException
+     * @return ApplicationInterface
      */
-    public function getAccessToken()
+    public function getApplication()
     {
-        if($this->accessToken === null) {
-            throw new ClientException('Parameter "access_token" is required', ClientException::PARAMETER_NOT_SPECIFIED);
-        }
-
-        return $this->accessToken;
+        return $this->application;
     }
 
     /**
-     * @param string $accessToken
+     * @param ApplicationInterface $application
      * @return $this
      */
-    public function setAccessToken($accessToken)
+    public function setApplication(ApplicationInterface $application)
     {
-        $this->accessToken = $accessToken;
+        $this->application = $application;
         return $this;
     }
 
     /**
-     * @return int
+     * @return ShopInterface
      */
-    public function getExpiresIn()
+    public function getShop()
     {
-        return $this->expiresIn;
+        return $this->shop;
     }
 
     /**
-     * @param int $expiresIn
+     * @param ShopInterface $shop
      * @return $this
      */
-    public function setExpiresIn($expiresIn)
+    public function setShop(ShopInterface $shop)
     {
-        $this->expiresIn = $expiresIn;
+        $this->shop = $shop;
         return $this;
     }
 
