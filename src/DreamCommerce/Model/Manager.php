@@ -11,7 +11,7 @@ use DreamCommerce\Model\Provider\Rest as RestProvider;
 use DreamCommerce\Model\Provider\Doctrine as DoctrineProvider;
 use DreamCommerce\Model\Provider\Webhook as WebhookProvider;
 
-class Manager
+class Manager implements ManagerInterface
 {
     const PROVIDER_SKELETON = 'skeleton';
     const PROVIDER_WEBHOOK = 'webhook';
@@ -29,20 +29,15 @@ class Manager
     private $serial = PHP_INT_MAX;
 
     /**
-     * @param ShopInterface|null $shop
-     * @param string $objectName
-     * @param int $objectId
-     * @param boolean $fromInstanceCache
-     * @return ShopDependentInterface|boolean
+     * {@inheritdoc}
      */
-    public function find(ShopInterface $shop, $objectName, $objectId, $fromInstanceCache = true)
+    public function find(ShopInterface $shop, $objectName, $objectId, $forceProvider = null)
     {
 
     }
 
     /**
-     * @param ShopDependentInterface $object
-     * @return boolean
+     * {@inheritdoc}
      */
     public function persist(ShopDependentInterface $object)
     {
@@ -50,9 +45,15 @@ class Manager
     }
 
     /**
-     * @param string|ProviderInterface $provider
-     * @param array|int $priority
-     * @throws ModelException
+     * {@inheritdoc}
+     */
+    public function flush(ShopDependentInterface $object = null)
+    {
+
+    }
+
+    /**
+     * {@inheritdoc}
      */
     public function registerProvider($provider, $priority = 10)
     {
@@ -85,7 +86,7 @@ class Manager
     }
 
     /**
-     * @return \SplPriorityQueue
+     * {@inheritdoc}
      */
     public function getProviders()
     {
