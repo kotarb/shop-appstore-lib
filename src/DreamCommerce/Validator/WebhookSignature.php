@@ -12,10 +12,10 @@ class WebhookSignature implements ValidatorInterface
      * @return bool
      * @throws WebhookException
      */
-    public function valid($object)
+    public function isValid($object)
     {
         if(! $object instanceof WebhookRequest) {
-            throw new WebhookException('', WebhookException::WEBHOOK_SIGNATURE_INVALID);
+            throw new WebhookException('', WebhookException::WEBHOOK_SIGNATURE_INVALID); // TODO
         }
 
         $hash = sha1(

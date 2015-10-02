@@ -8,5 +8,5 @@ interface ValidatorInterface
      * @param mixed $data
      * @return boolean
      */
-    public function valid($data);
+    public function isValid($data);
 }

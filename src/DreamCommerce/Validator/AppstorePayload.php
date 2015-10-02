@@ -13,7 +13,7 @@ class AppstorePayload implements ValidatorInterface
      * @return bool
      * @throws AppstoreException
      */
-    public function valid($object)
+    public function isValid($object)
     {
         if(! $object instanceof AppstoreRequest) {
             throw new AppstoreException('', AppstoreException::APPSTORE_SIGNATURE_INVALID);
@@ -24,7 +24,7 @@ class AppstorePayload implements ValidatorInterface
         /** @var OAuthClient $clientHandler */
         $clientHandler = $application->getClientHandler();
         if(!($clientHandler instanceof OAuthClient)) {
-            // TODO
+            // TODO throw Exception ...
         }
 
         $payload = array(
